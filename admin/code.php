@@ -100,6 +100,7 @@ if(isset($_POST['logout_btn'])){
             header('location: register.php');
         }
     }
+    // end of user update information code 
 
     // add sub category code
     if(isset($_POST['addsubcategory'])){

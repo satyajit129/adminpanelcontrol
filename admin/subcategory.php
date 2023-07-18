@@ -6,6 +6,27 @@
     include('includes/sidebar.php');
     include('config/dbcon.php');
 ?>
+
+<!-- sub category delete code start here -->
+
+<?php if (isset($_GET['delete_user_id'])) {
+    $delete_id = $_GET['delete_user_id'];
+    
+    // search for $delete_id to execute SQL operation
+    
+    $delete_query = "DELETE FROM subcategory WHERE subcategory_id = '$delete_id'";
+    $query = mysqli_query($con, $delete_query);
+    
+    if ($query === TRUE) {
+        $_SESSION['auth_status'] = "SubCategory deleted successfully";
+        // header('location: register.php');
+    } else {
+        $_SESSION['auth_status'] = "SubCategory deletion failed";
+    }
+}
+?>
+<!-- sub category delete code end here -->
+
 <div class="content-wrapper">
     <div class="content-header">
         <div class="container-fluid">
@@ -76,7 +97,7 @@
                                         <a href="#">
                                             <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
                                         </a>
-                                        <a href="subcategory.php?delete_user_id=<?php echo $row['category_id'];?>"
+                                        <a href="subcategory.php?delete_user_id=<?php echo $row['subcategory_id'];?>"
                                             onclick="return confirm('Are you sure you want to delete this category?')"><i
                                                 class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i></a>
                                     </td>

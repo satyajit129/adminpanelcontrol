@@ -10,7 +10,7 @@
 if (isset($_GET['delete_user_id'])) {
     $delete_id = $_GET['delete_user_id'];
     
-    // Sanitize $delete_id to prevent SQL injection
+    // search for $delete_id to execute SQL operation
     
     $delete_query = "DELETE FROM category WHERE category_id = '$delete_id'";
     $query = mysqli_query($con, $delete_query);
