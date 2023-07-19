@@ -8,7 +8,7 @@
     include('config/dbcon.php');
 ?>
 <div class="content-wrapper">
-    <div class="content-header">
+<div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
@@ -27,13 +27,14 @@
         </div>
         <!-- /.container-fluid -->
     </div>
+
     <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
                 
                     <div class="card-header">
-                        ADD Sub Category
+                        ADD POST
                         <a href="subcategory.php" class="btn btn-success float-right btn-sm"><i
                                 class="fa fa-backward m-1" aria-hidden="true"></i>Back</a>
                     </div>
@@ -42,12 +43,12 @@
                             <div class="col-md-8">
                                 <form action="code.php" method="POST">
                                     <div class="form-group">
-                                        <label for="subcategory_name">Subcategory Name</label>
+                                        <label for="subcategory_name">POST Name</label>
                                         <input type="text" class="form-control" name="subcategory_name"
                                             id="subcategory_name" required>
                                     </div>
                                     <div class="form-group">
-                                        <label for="parent_category_id">Parent Category</label>
+                                        <label for="parent_category_id">Category</label>
                                         <select class="form-control" name="parent_category_id" id=""
                                             required>
                                             <option value="">Select a category</option>
@@ -62,8 +63,30 @@
                                             ?>     
                                         </select>
                                     </div>
+                                    
+                                    <div class="form-group">
+                                    <label for="parent_category_id">SubCategory</label>
+                                    <select class="form-control" name="parent_subcategory_id" id="" required>
+                                    <option value="">Select a SubCategory</option>
+                                        <?php
+                                            $categoryQuery = "SELECT category_id , category_name FROM category";
+                                            $result = mysqli_query($con, $categoryQuery);
+                                            while ($row = mysqli_fetch_assoc($result)){
+                                            $categoryId = $row['category_id'];
+                                            $categoryName = $row['category_name'];
+                                            $subcategoryQuery = "SELECT subcategory_id, subcategory_name FROM subcategory WHERE category_id = $categoryId";
+                                            $result = mysqli_query($con, $subcategoryQuery);
+                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                $subcategoryId = $row['subcategory_id'];
+                                                $subcategoryName = $row['subcategory_name'];
+                                                echo "<option value='$subcategoryId'>$subcategoryName</option>";
+                                            }
+                                        }
+                                            
+                                        ?>
+                                    </select>
+                                    </div>
 
-                                    <button type="submit" name="addsubcategory" class="btn btn-primary">Add Subcategory</button>
                                 </form>
                             </div>
                         </div>
@@ -72,6 +95,8 @@
             </div>
         </div>
     </div>
+                
+
 </div>
 <?php
     include('includes/footer.php');

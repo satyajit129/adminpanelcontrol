@@ -25,7 +25,7 @@
                         data-accordion="false">
                         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                        <li class="nav-item has-treeview menu-open">
+                        <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>
@@ -33,7 +33,7 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item has-treeview menu-open">
+                        <li class="nav-item ">
                             <a href="category.php" class="nav-link">
                                 <i class="nav-icon fa fa-book"></i>
                                 <p>
@@ -41,11 +41,27 @@
                                 </p>
                             </a>
                         </li>
-                        <li class="nav-item has-treeview menu-open">
+                        <li class="nav-item ">
                             <a href="subcategory.php" class="nav-link">
                                 <i class="nav-icon fa fa-book"></i>
                                 <p>
                                     Sub Category
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="post.php" class="nav-link">
+                                <i class="nav-icon fa fa-book"></i>
+                                <p>
+                                    POST
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item ">
+                            <a href="tag.php" class="nav-link">
+                                <i class="nav-icon fa fa-book"></i>
+                                <p>
+                                    TAG
                                 </p>
                             </a>
                         </li>

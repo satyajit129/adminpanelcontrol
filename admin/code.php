@@ -79,6 +79,26 @@ if(isset($_POST['logout_btn'])){
 
     // end of add category code 
 
+// add tag code
+    if (isset($_POST['addtag'])) {
+        $addtag = isset($_POST['addtag']) ? $_POST['addtag'] : null;
+    
+        $insertquery = "INSERT INTO tag (tag_name) VALUES ('$addtag')";
+        $query = mysqli_query($con, $insertquery);
+        
+        if ($query) {
+            $_SESSION['status'] = "Tag added successfully";
+            header('location: tag.php');
+            exit();
+        } else {
+            $_SESSION['status'] = "Tag not added";
+            header('location: tag.php');
+            exit();
+        }
+    }
+
+    // end of add category code 
+
 
     // user update information code 
     if(isset($_POST['updateuser'])){
