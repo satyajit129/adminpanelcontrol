@@ -49,9 +49,9 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="parent_category_id">Category</label>
-                                        <select class="form-control" name="parent_category_id" id=""
+                                        <select class="form-control" name="parent_category_id" id="category-dropdown"
                                             required>
-                                            <option value="">Select a category</option>
+                                            <option value="" selected disabled >Select a category</option>
                                             <?php 
                                                 $categoryQuery = "SELECT category_id , category_name FROM category";
                                                 $result = mysqli_query($con, $categoryQuery);
@@ -65,25 +65,9 @@
                                     </div>
                                     
                                     <div class="form-group">
-                                    <label for="parent_category_id">SubCategory</label>
-                                    <select class="form-control" name="parent_subcategory_id" id="" required>
-                                    <option value="">Select a SubCategory</option>
-                                        <?php
-                                            $categoryQuery = "SELECT category_id , category_name FROM category";
-                                            $result = mysqli_query($con, $categoryQuery);
-                                            while ($row = mysqli_fetch_assoc($result)){
-                                            $categoryId = $row['category_id'];
-                                            $categoryName = $row['category_name'];
-                                            $subcategoryQuery = "SELECT subcategory_id, subcategory_name FROM subcategory WHERE category_id = $categoryId";
-                                            $result = mysqli_query($con, $subcategoryQuery);
-                                            while ($row = mysqli_fetch_assoc($result)) {
-                                                $subcategoryId = $row['subcategory_id'];
-                                                $subcategoryName = $row['subcategory_name'];
-                                                echo "<option value='$subcategoryId'>$subcategoryName</option>";
-                                            }
-                                        }
-                                            
-                                        ?>
+                                    <label for="parent_category_id" >SubCategory</label>
+                                    <select class="form-control" name="parent_subcategory_id" id="sub-category-dropdown" required>
+                                        <option value="" selected disabled >Select a category</option>
                                     </select>
                                     </div>
 

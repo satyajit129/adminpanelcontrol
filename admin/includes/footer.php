@@ -55,5 +55,26 @@
       });
     });
   </script>
+
+<script>
+  $(document).ready(function() {
+  $('#category-dropdown').on('change', function() {
+  var category_id = this.value;
+  console.log(category_id);
+  $.ajax({
+  url: "subcategorydrop.php",
+  type: "POST",
+  data: {
+  category_id: category_id
+  },
+  cache: false,
+  success: function(result){
+    console.log(result);
+  $("#sub-category-dropdown").html(result);
+  }
+  });
+  });
+  });
+</script>
 </body>
 </html>
