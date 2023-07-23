@@ -40,12 +40,12 @@
                     </div>
                     <div class="card-body">
                         <div class="row justify-content-center">
-                            <div class="col-md-8">
-                                <form action="code.php" method="POST">
+                            <div class="col-md-10">
+                                <form action="code.php" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
                                         <label for="subcategory_name">POST Name</label>
-                                        <input type="text" class="form-control" name="subcategory_name"
-                                            id="subcategory_name" required>
+                                        <input type="text" class="form-control" name="title"
+                                            id="" required>
                                     </div>
                                     <div class="form-group">
                                         <label for="parent_category_id">Category</label>
@@ -68,7 +68,20 @@
                                     <label for="parent_category_id" >SubCategory</label>
                                     <select class="form-control" name="parent_subcategory_id" id="sub-category-dropdown" required>
                                         <option value="" selected disabled >Select a category</option>
+
                                     </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">POst Discription </label>
+                                        <textarea name="description" id="summernote" class="form-control" rows="4" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="">Post IMG </label>
+                                        <input type="file" class="form-control" name="post_img"
+                                            id="" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" name="addpost" class="btn btn-info">ADD POST </button>
                                     </div>
 
                                 </form>

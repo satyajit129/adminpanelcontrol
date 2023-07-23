@@ -67,7 +67,7 @@
                                 <tr>
                                     <td><?php echo $serialNumber++ ; ?></td>
                                     <td><?php echo $row['title']; ?></td>
-                                    <td><?php echo $row['details']; ?></td>
+                                    <td><?php echo $row['post_details']; ?></td>
                                     <td><?php echo $row['status']; ?></td>
                                     <td><?php echo $row['tumb_img']; ?></td>
                                     <td>

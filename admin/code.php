@@ -1,6 +1,47 @@
 <?php
     session_start();
     include('config/dbcon.php');  
+
+// add post code start here
+if(isset($_POST['addpost'])){
+    $title          = isset($_POST['title']) ? $_POST['title'] : null;
+    $description    = isset($_POST['description']) ? $_POST['description'] : null;
+    $category_id    = isset($_POST['parent_category_id']) ? $_POST['parent_category_id'] : null;
+    $subcategory_id = isset($_POST['parent_subcategory_id']) ? $_POST['parent_subcategory_id'] : null;   
+
+    if (isset($_FILES['post_img']) && $_FILES['post_img']['error'] === UPLOAD_ERR_OK) {
+        $post_img = $_FILES['post_img']['name'];
+        $templocation = $_FILES['post_img']['tmp_name'];
+        $updatelocation = "images/$post_img";
+
+        // Move the uploaded file to the desired location
+        if (move_uploaded_file($templocation, $updatelocation)){
+            $insertquery    = "INSERT INTO post(`title`, `post_details`, `category_id`, `subcategory_id`, `tumb_img`) VALUES ('$title','$description','$category_id','$subcategory_id','$post_img')";
+            $query          = mysqli_query($con, $insertquery);
+        
+            if ($query) {
+                $_SESSION['status'] = "POST added successfully";
+                header('location: post.php');
+                exit();
+            } else {
+                $_SESSION['status'] = "POST not added";
+                header('location: post.php');
+                exit();
+            }
+
+        }
+        else{
+            $_SESSION['status'] = "POST not add ";
+            header('location: post.php');
+        }
+    }    
+}
+
+
+
+
+
+
 // logout code 
 if(isset($_POST['logout_btn'])){
 
