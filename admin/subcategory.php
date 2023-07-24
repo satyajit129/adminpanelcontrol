@@ -51,12 +51,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                <?php
-                    if (isset($_SESSION['status'])) {
-                        echo '<div class="alert alert-success mt-3" role="alert">' . $_SESSION['status'] . '</div>';
-                        unset($_SESSION['status']);
-                    }
-                ?>
+            
                     <div class="card-header">
                         Sub Category
                         <a href="addsubcategory.php" class="btn btn-success btn-sm float-right">Add New SubCategory</a>
@@ -94,12 +89,12 @@
                                     <td><?php echo $row['subcategory_name']; ?></td>
                                     <td><?php echo $row['status']; ?></td>
                                     <td>
-                                        <a href="#">
-                                            <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
-                                        </a>
+                                    <a href="subcategoryedit.php?subcategory_id=<?php echo $row['subcategory_id']; ?>">
+                                        <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
+                                    </a>
                                         <a href="subcategory.php?delete_user_id=<?php echo $row['subcategory_id'];?>"
-                                            onclick="return confirm('Are you sure you want to delete this category?')"><i
-                                                class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i></a>
+                                        onclick="return confirm('Are you sure you want to delete this category?')"><i
+                                        class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i></a>
                                     </td>
                                 </tr>
                                 <?php

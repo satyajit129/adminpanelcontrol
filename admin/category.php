@@ -7,13 +7,13 @@
     include('config/dbcon.php');
 ?>
 <?php
-if (isset($_GET['delete_user_id'])) {
-    $delete_id = $_GET['delete_user_id'];
+if (isset($_GET['delete_category_id'])) {
+    $delete_id = $_GET['delete_category_id'];
     
     // search for $delete_id to execute SQL operation
     
-    $delete_query = "DELETE FROM category WHERE category_id = '$delete_id'";
-    $query = mysqli_query($con, $delete_query);
+    $delete_query   = "DELETE FROM category WHERE category_id= '$delete_id'";
+    $query          = mysqli_query($con, $delete_query);
     
     if ($query === TRUE) {
         $_SESSION['auth_status'] = "Category deleted successfully";
@@ -99,10 +99,11 @@ if (isset($_GET['delete_user_id'])) {
                                     <td><?php echo $row['category_name']; ?></td>
                                     <td><?php echo $row['status']; ?></td>
                                     <td>
-                                        <a href="#">
+                                        <a href="editcategory.php?category_id=<?php echo $row['category_id'];?>">
                                             <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
                                         </a>
-                                        <a href="category.php?delete_user_id=<?php echo $row['category_id'];?>" onclick="return confirm('Are you sure you want to delete this category?')"><i class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i></a>
+                                        <a href="category.php?delete_category_id=<?php echo $row['category_id'];?>">
+                                        <i class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i></a>
                                     </td>
                                 </tr>
                                 <?php
@@ -113,7 +114,6 @@ if (isset($_GET['delete_user_id'])) {
                                 <tr>
                                     <td>No data Found</td>
                                 </tr>
-
                                 <?php
                                 }
 

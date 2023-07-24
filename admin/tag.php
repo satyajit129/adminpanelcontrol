@@ -75,7 +75,7 @@ if (isset($_GET['delete_user_id'])) {
                             <table id="datatable">
                             <thead>
                                 <tr>
-                                    <th>Serial Number</th>
+                                    <th class="sl">Serial Number</th>
                                     <th>Name</th>
                                     <th>Status</th>
                                     <th>Action</th>

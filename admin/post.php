@@ -69,7 +69,9 @@
                                     <td><?php echo $row['title']; ?></td>
                                     <td><?php echo $row['post_details']; ?></td>
                                     <td><?php echo $row['status']; ?></td>
-                                    <td><?php echo $row['tumb_img']; ?></td>
+                                    <td>     
+                                        <img src="images/<?php echo $row['tumb_img']; ?>" width="50px" height="50px" alt="Uploaded Image">
+                                    </td>
                                     <td>
                                         <a href="#">
                                             <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>

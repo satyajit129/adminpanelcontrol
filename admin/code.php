@@ -2,6 +2,20 @@
     session_start();
     include('config/dbcon.php');  
 
+
+// update subcategory code start here
+
+if(isset($_POST['updatesubcategory'])){
+    $subcategory_id = $_POST['subcategory_id'];
+    $subcategory_name = mysqli_real_escape_string($con, $_POST['subcategory_name']);
+     
+
+}
+
+
+
+// update subcategory code end here
+
 // add post code start here
 if(isset($_POST['addpost'])){
     $title          = isset($_POST['title']) ? $_POST['title'] : null;
@@ -11,7 +25,7 @@ if(isset($_POST['addpost'])){
 
     if (isset($_FILES['post_img']) && $_FILES['post_img']['error'] === UPLOAD_ERR_OK) {
         $post_img = $_FILES['post_img']['name'];
-        $templocation = $_FILES['post_img']['tmp_name'];
+        $tempname = $_FILES['post_img']['tmp_name'];
         $updatelocation = "images/$post_img";
 
         // Move the uploaded file to the desired location
@@ -44,7 +58,6 @@ if(isset($_POST['addpost'])){
 
 // logout code 
 if(isset($_POST['logout_btn'])){
-
 
     $_SESSION['status']= " Logged out successfully";
     header('location: login.php');
@@ -117,7 +130,6 @@ if(isset($_POST['logout_btn'])){
             exit();
         }
     }
-
     // end of add category code 
 
 // add tag code
@@ -163,6 +175,25 @@ if(isset($_POST['logout_btn'])){
     }
     // end of user update information code 
 
+//  update category information  code start
+
+    if (isset($_POST['updatecategory'])) {
+        $category_id = $_POST['category_id'];
+        $category_name = mysqli_real_escape_string($con, $_POST['category_name']);
+        $query = "UPDATE category SET category_name='$category_name' WHERE category_id='$category_id' LIMIT 1";
+        $query_run = mysqli_query($con, $query);
+        if ($query_run) {
+            $_SESSION['status'] = "Category Updated successfully";
+            header('location: category.php');
+        } else {
+            $_SESSION['status'] = "Category Updating Failed";
+            header('location: category.php');
+        }
+    }
+
+//  update category information  code end
+
+
     // add sub category code
     if(isset($_POST['addsubcategory'])){
 
@@ -184,7 +215,5 @@ if(isset($_POST['logout_btn'])){
         mysqli_close($con);
 
     }
-
-
     // end of add subcategory code
 ?>
