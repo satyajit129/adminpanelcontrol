@@ -3,53 +3,88 @@
     include('config/dbcon.php');  
 
 
+
+
 // update subcategory code start here
+    if(isset($_POST['updatesubcategory'])){
+        $subcategory_id = $_POST['subcategory_id'];
+        $new_subcategory_name = $_POST['subcategory_name'];
+        $new_parent_category_id = $_POST['parent_category_id'];
+        $update_query = "UPDATE `subcategory` SET `subcategory_name`='$new_subcategory_name', `category_id`='$new_parent_category_id' WHERE `subcategory_id`='$subcategory_id'";
+        $update_result = mysqli_query($con, $update_query);
 
-if(isset($_POST['updatesubcategory'])){
-    $subcategory_id = $_POST['subcategory_id'];
-    $subcategory_name = mysqli_real_escape_string($con, $_POST['subcategory_name']);
-     
+        if($update_result){
+            $_SESSION['status']= "Subcategory Updated  successfully";
+            header('location: subcategory.php');
+        }
+        else{
+            $_SESSION['status']= "Subcategory Updating Failed";
+            header('location: subcategory.php');
+        }     
 
-}
-
-
-
+    }
 // update subcategory code end here
 
+
+
 // add post code start here
-if(isset($_POST['addpost'])){
-    $title          = isset($_POST['title']) ? $_POST['title'] : null;
-    $description    = isset($_POST['description']) ? $_POST['description'] : null;
-    $category_id    = isset($_POST['parent_category_id']) ? $_POST['parent_category_id'] : null;
-    $subcategory_id = isset($_POST['parent_subcategory_id']) ? $_POST['parent_subcategory_id'] : null;   
+if (isset($_POST['addpost'])) {
+    $title = isset($_POST['title']) ? $_POST['title'] : null;
+    $description = isset($_POST['description']) ? $_POST['description'] : null;
+    $category_id = isset($_POST['parent_category_id']) ? $_POST['parent_category_id'] : null;
+    $subcategory_id = isset($_POST['parent_subcategory_id']) ? $_POST['parent_subcategory_id'] : null;
+    
+    if (isset($_POST['post_tag']) && is_array($_POST['post_tag'])) {
+        $selected_tags = $_POST['post_tag'];
+    } else {
+        $selected_tags = array(); // If no tags were selected, set an empty array
+    }
 
     if (isset($_FILES['post_img']) && $_FILES['post_img']['error'] === UPLOAD_ERR_OK) {
         $post_img = $_FILES['post_img']['name'];
         $tempname = $_FILES['post_img']['tmp_name'];
         $updatelocation = "images/$post_img";
 
-        // Move the uploaded file to the desired location
-        if (move_uploaded_file($templocation, $updatelocation)){
-            $insertquery    = "INSERT INTO post(`title`, `post_details`, `category_id`, `subcategory_id`, `tumb_img`) VALUES ('$title','$description','$category_id','$subcategory_id','$post_img')";
-            $query          = mysqli_query($con, $insertquery);
+        if (move_uploaded_file($tempname, $updatelocation)) {
+            // Prepare the SQL statement using a prepared statement
+            $insertquery = "INSERT INTO `post`(`title`, `post_details`, `category_id`, `subcategory_id`, `tumb_img`) VALUES (?, ?, ?, ?, ?)";
+            $query_run = mysqli_prepare($con, $insertquery);
         
-            if ($query) {
+            mysqli_stmt_bind_param($query_run, "ssiss", $title, $description, $category_id, $subcategory_id, $post_img);
+        
+            // Execute the prepared statement
+            if (mysqli_stmt_execute($query_run)) {
+                // Get the ID of the newly inserted post
+                $post_id = mysqli_insert_id($con);
+        
+                // Insert the post-tag relationships into the `post_tags` table
+                if (!empty($selected_tags)) {
+                    // Prepare the SQL statement for inserting tags
+                    $insert_tags_query = "INSERT INTO `post_tag` (`post_id`, `tag_id`) VALUES (?, ?)";
+                    $insert_tags_stmt = mysqli_prepare($con, $insert_tags_query);
+        
+                    foreach ($selected_tags as $tag_id) {
+                        mysqli_stmt_bind_param($insert_tags_stmt, "ii", $post_id, $tag_id);
+                        mysqli_stmt_execute($insert_tags_stmt);
+                    }
+                }
+        
                 $_SESSION['status'] = "POST added successfully";
                 header('location: post.php');
                 exit();
             } else {
-                $_SESSION['status'] = "POST not added";
+                $_SESSION['status'] = "Error: " . mysqli_stmt_error($query_run);
                 header('location: post.php');
                 exit();
             }
-
-        }
-        else{
-            $_SESSION['status'] = "POST not add ";
+        } else {
+            $_SESSION['status'] = "Error uploading the image.";
             header('location: post.php');
+            exit();
         }
-    }    
+    }
 }
+// add post code end here
 
 
 
@@ -64,12 +99,14 @@ if(isset($_POST['logout_btn'])){
     session_destroy();
     unset($_SESSION['auth']);
     unset($_SESSION['auth_user']);
-    // exit(0);
 }
 // log out code end here
+
+
+
+
     
 // user add code start here
-
     if(isset($_POST['adduser'])){
         $name       = mysqli_real_escape_string($con, $_POST['name']) ;        
         $phone      = mysqli_real_escape_string($con, $_POST['phone']) ;
@@ -110,10 +147,17 @@ if(isset($_POST['logout_btn'])){
 
 
     }
-    // user add code end here 
+// user add code end here 
 
 
-    // add category code
+
+
+
+
+
+
+
+// add category code
     if (isset($_POST['addcategory'])) {
         $addcategory = isset($_POST['addcategory']) ? $_POST['addcategory'] : null;
     
@@ -130,7 +174,14 @@ if(isset($_POST['logout_btn'])){
             exit();
         }
     }
-    // end of add category code 
+// end of add category code 
+
+
+
+
+
+
+
 
 // add tag code
     if (isset($_POST['addtag'])) {
@@ -149,11 +200,18 @@ if(isset($_POST['logout_btn'])){
             exit();
         }
     }
+// end of add category code 
 
-    // end of add category code 
 
 
-    // user update information code 
+
+
+
+
+
+
+
+// user update information code 
     if(isset($_POST['updateuser'])){
         $user_id    = $_POST['user_id'];
         $name       = mysqli_real_escape_string($con, $_POST['name']) ;
@@ -173,7 +231,16 @@ if(isset($_POST['logout_btn'])){
             header('location: register.php');
         }
     }
-    // end of user update information code 
+// end of user update information code
+
+
+
+
+
+
+
+
+
 
 //  update category information  code start
 
@@ -190,11 +257,17 @@ if(isset($_POST['logout_btn'])){
             header('location: category.php');
         }
     }
-
 //  update category information  code end
 
 
-    // add sub category code
+
+
+
+
+
+
+
+// add sub category code
     if(isset($_POST['addsubcategory'])){
 
         $subcategoryname = isset($_POST['subcategory_name']) ? $_POST['subcategory_name'] : null;
@@ -215,5 +288,5 @@ if(isset($_POST['logout_btn'])){
         mysqli_close($con);
 
     }
-    // end of add subcategory code
+// end of add subcategory code
 ?>

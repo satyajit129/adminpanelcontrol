@@ -40,46 +40,49 @@
                             <div class="col-md-8">
                                 <form Action="code.php" method="POST">
                                     <?php
-                                    if(isset($_GET['subcategory_id'])){
-                                        $subcategory_id= $_GET['subcategory_id'];
-                                        $query= "SELECT * FROM `subcategory` WHERE subcategory_id='$subcategory_id' LIMIT 1 ";
-                                        $query_run= mysqli_query($con, $query);
-                                        if(mysqli_num_rows($query_run) > 0){
-                                            foreach($query_run as $row){
-                                                ?>
-                                                <div class="form-group">
-                                                    <input type="hidden" name="subcategory_id"
-                                                        value="<?php echo $row['subcategory_id'] ?>">
-                                                    <label for="">Name</label>
-                                                    <input type="text" name="subcategory_name"
-                                                        value="<?php echo $row['subcategory_name'] ?>" class="form-control" id=""
-                                                        placeholder="Enter SubCategory Name" required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="parent_category_id">Parent Category</label>
-                                                    <select class="form-control" name="parent_category_id" id="" required>
-                                                        <option value="">Select a category</option>
-                                                        <?php 
-                                                            $categoryQuery = "SELECT category_id , category_name FROM category";
-                                                            $result = mysqli_query($con, $categoryQuery);
-                                                            while ($row = mysqli_fetch_assoc($result)){
-                                                            $categoryId = $row['category_id'];
-                                                            $categoryName = $row['category_name'];
-                                                            echo "<option value='$categoryId'>$categoryName</option>";
-                                                            } 
-                                                        ?>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group">
-                                                    <button type="submit" name="updatesubcategory" class="btn btn-info">Update
-                                                        Category Name</button>
-                                                </div>
+                                    if (isset($_GET['subcategory_id'])) {
+                                        $subcategory_id = $_GET['subcategory_id'];
+                                        $query = "SELECT * FROM `subcategory` WHERE subcategory_id='$subcategory_id' LIMIT 1 ";
+                                        $query_run = mysqli_query($con, $query);
+                                        if (mysqli_num_rows($query_run) > 0) {
+                                            foreach ($query_run as $row) {
+                                    ?>
+                                    <form action="update_subcategory.php" method="post">
+                                        <div class="form-group">
+                                            <input type="hidden" name="subcategory_id"
+                                                value="<?php echo $row['subcategory_id'] ?>">
+                                            <label for="">Name</label>
+                                            <input type="text" name="subcategory_name"
+                                                value="<?php echo $row['subcategory_name'] ?>" class="form-control"
+                                                id="" placeholder="Enter SubCategory Name" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="parent_category_id">Parent Category</label>
+                                            <select class="form-control" name="parent_category_id" id="" required>
+                                                <option value="">Select a category</option>
                                                 <?php
-                                            }
-                                        }
-
+                                                    $categoryQuery = "SELECT category_id , category_name FROM category";
+                                                    $result = mysqli_query($con, $categoryQuery);
+                                                    while ($categoryRow = mysqli_fetch_assoc($result)) {
+                                                        $categoryId = $categoryRow['category_id'];
+                                                        $categoryName = $categoryRow['category_name'];
+                                                        $selected = ($categoryId == $row['category_id']) ? 'selected' : '';
+                                                        echo "<option value='$categoryId' $selected>$categoryName</option>";
+                                                    }
+                                                ?>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" name="updatesubcategory" class="btn btn-info">Update
+                                                Category Name</button>
+                                        </div>
+                                    </form>
+                                    <?php
                                     }
-                                ?>
+                                }
+                            }
+                            ?>
+
                                 </form>
                             </div>
                         </div>

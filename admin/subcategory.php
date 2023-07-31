@@ -72,43 +72,57 @@
                                 <tr>
                                     <th>Serial Number</th>
                                     <th>Name</th>
+                                    <th>parent Category</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php
-                                $query= "SELECT * FROM subcategory";
-                                $query_run= mysqli_query($con,$query);
+                                $query = "SELECT * FROM subcategory";
+                                $query_run = mysqli_query($con, $query);
                                 $serialNumber = 1;
-                                if(mysqli_num_rows($query_run) >0){
-                                    while ($row = mysqli_fetch_assoc($query_run)){
-                                ?>
-                                <tr>
-                                    <td><?php echo $serialNumber++; ?></td>
-                                    <td><?php echo $row['subcategory_name']; ?></td>
-                                    <td><?php echo $row['status']; ?></td>
-                                    <td>
-                                    <a href="subcategoryedit.php?subcategory_id=<?php echo $row['subcategory_id']; ?>">
-                                        <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
-                                    </a>
-                                        <a href="subcategory.php?delete_user_id=<?php echo $row['subcategory_id'];?>"
-                                        onclick="return confirm('Are you sure you want to delete this category?')"><i
-                                        class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i></a>
-                                    </td>
-                                </tr>
-                                <?php
+                                if (mysqli_num_rows($query_run) > 0) {
+                                    while ($row = mysqli_fetch_assoc($query_run)) {
+                                        ?>
+                                        <tr>
+                                            <td><?php echo $serialNumber++; ?></td>
+                                            <td><?php echo $row['subcategory_name']; ?></td>
+                                            <?php
+                                            $categoryId = $row['category_id'];
+                                            $categoryQuery = "SELECT * FROM category WHERE category_id='$categoryId'";
+                                            $runcategoryQuery = mysqli_query($con, $categoryQuery);
+                                            if (mysqli_num_rows($runcategoryQuery) > 0) {
+                                                $data = mysqli_fetch_assoc($runcategoryQuery);
+                                                ?>
+                                                <td><?php echo $data['category_name']; ?></td>
+                                                <?php
+                                            } else {
+                                                ?>
+                                                <td>Category Not Found</td>
+                                                <?php
+                                            }
+                                            ?>
+                                            <td><?php echo $row['status']; ?></td>
+                                            <td>
+                                                <a href="subcategoryedit.php?subcategory_id=<?php echo $row['subcategory_id']; ?>">
+                                                    <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
+                                                </a>
+                                                <a href="subcategory.php?delete_user_id=<?php echo $row['subcategory_id']; ?>"
+                                                    onclick="return confirm('Are you sure you want to delete this category?')">
+                                                    <i class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <?php
                                     }
-                                }
-                                else{
-                                ?>
+                                } else {
+                                    ?>
                                     <tr>
-                                        <td>No data Found</td>
+                                        <td colspan="5">No data Found</td>
                                     </tr>
-                                    
-                                <?php
+                                    <?php
                                 }
-
                                 ?>
                             </tbody>
                         </table>

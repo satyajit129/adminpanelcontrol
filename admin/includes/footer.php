@@ -84,7 +84,16 @@
         tabsize: 2,
         height: 150
       });
-    </script>
+</script>
     <!-- //Summernote JS - CDN Link -->
+
+    <!-- multiple option selection cdn using select2 -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+    $(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
+    });
+</script>
+    <!-- multiple option selection cdn using select2 -->
 </body>
 </html>
