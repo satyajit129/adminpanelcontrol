@@ -94,6 +94,6 @@
     $('.js-example-basic-multiple').select2();
     });
 </script>
-    <!-- multiple option selection cdn using select2 -->
+  <!-- multiple option selection cdn using select2 -->
 </body>
 </html>

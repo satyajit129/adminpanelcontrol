@@ -158,12 +158,19 @@ if(isset($_POST['logout_btn'])){
 
 
 // add category code
-    if (isset($_POST['addcategory'])) {
-        $addcategory = isset($_POST['addcategory']) ? $_POST['addcategory'] : null;
+if (isset($_POST['addcategory'])) {
+    $addcategory = isset($_POST['addcategory']) ? $_POST['addcategory'] : null;
     
+    // Check if the category already exists or not
+    $categoryquery = "SELECT * FROM category WHERE category_name = '$addcategory'";
+    $categoryconnect = mysqli_query($con, $categoryquery);
+    $categorycount = mysqli_num_rows($categoryconnect);
+    
+    if ($categorycount == 0) {
+        // Category doesn't exist, so insert it into the database
         $insertquery = "INSERT INTO category (category_name) VALUES ('$addcategory')";
         $query = mysqli_query($con, $insertquery);
-        
+
         if ($query) {
             $_SESSION['status'] = "Category added successfully";
             header('location: category.php');
@@ -173,7 +180,15 @@ if(isset($_POST['logout_btn'])){
             header('location: category.php');
             exit();
         }
+    } else {
+        // Category already exists
+        $_SESSION['status'] = "Category already exists";
+        
+        header('location: category.php');
+        // exit();
     }
+}
+
 // end of add category code 
 
 
@@ -184,12 +199,20 @@ if(isset($_POST['logout_btn'])){
 
 
 // add tag code
-    if (isset($_POST['addtag'])) {
-        $addtag = isset($_POST['addtag']) ? $_POST['addtag'] : null;
-    
+
+if (isset($_POST['addtag'])) {
+    $addtag = isset($_POST['addtag']) ? $_POST['addtag'] : null;
+
+    // Check if the tag already exists or not
+    $tagquery = "SELECT * FROM tag WHERE tag_name = '$addtag'";
+    $tagconnect = mysqli_query($con, $tagquery);
+    $tagcount = mysqli_num_rows($tagconnect);
+
+    if ($tagcount == 0) {
+        // Tag doesn't exist, so insert it into the database
         $insertquery = "INSERT INTO tag (tag_name) VALUES ('$addtag')";
         $query = mysqli_query($con, $insertquery);
-        
+
         if ($query) {
             $_SESSION['status'] = "Tag added successfully";
             header('location: tag.php');
@@ -199,7 +222,14 @@ if(isset($_POST['logout_btn'])){
             header('location: tag.php');
             exit();
         }
+    } else {
+        // Tag already exists
+        $_SESSION['status'] = "Tag already exists";
+        header('location: tag.php');
+        exit();
     }
+}
+
 // end of add category code 
 
 
