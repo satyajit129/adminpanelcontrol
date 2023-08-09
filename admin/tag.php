@@ -94,7 +94,7 @@ if (isset($_GET['delete_user_id'])) {
                                     <td><?php echo $row['tag_name']; ?></td>
                                     <td><?php echo $row['status']; ?></td>
                                     <td>
-                                        <a href="#">
+                                        <a href="tagedit.php?tag_id=<?php echo $row['tag_id'];?>">
                                             <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
                                         </a>
                                         <a href="tag.php?delete_user_id=<?php echo $row['tag_id'];?>" onclick="return confirm('Are you sure you want to delete this category?')"><i class="fas fa-trash-alt fs-5 btn btn-danger btn-sm"></i></a>
@@ -111,12 +111,10 @@ if (isset($_GET['delete_user_id'])) {
 
                                 <?php
                                 }
-
                                 ?>
                             </tbody>
                             </table>
                         </div>
-
                     </div>
                 </div>
             </div>

@@ -128,6 +128,7 @@
             </div>
 
             <h2 class="entry-title">
+              <div class=""></div>
                 <a href="blog-single.php"><?php echo $row['title']; ?></a>
             </h2>
 
@@ -149,7 +150,7 @@
                           $limitedContent = implode(' ', $limitedWords);
 
                           if (count($words) > 30) {
-                              $limitedContent .= '...............';
+                              $limitedContent .= '........';
                           }
                           echo $limitedContent;
                     ?>

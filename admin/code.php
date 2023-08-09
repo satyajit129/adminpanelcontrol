@@ -6,23 +6,22 @@
 
 
 // update subcategory code start here
-    if(isset($_POST['updatesubcategory'])){
-        $subcategory_id = $_POST['subcategory_id'];
-        $new_subcategory_name = $_POST['subcategory_name'];
-        $new_parent_category_id = $_POST['parent_category_id'];
-        $update_query = "UPDATE `subcategory` SET `subcategory_name`='$new_subcategory_name', `category_id`='$new_parent_category_id' WHERE `subcategory_id`='$subcategory_id'";
-        $update_result = mysqli_query($con, $update_query);
+if(isset($_POST['updatesubcategory'])){
+    $subcategory_id = $_POST['subcategory_id'];
+    $new_subcategory_name = $_POST['subcategory_name'];
+    $new_parent_category_id = $_POST['parent_category_id'];
+    $update_query = "UPDATE `subcategory` SET `subcategory_name`='$new_subcategory_name', `category_id`='$new_parent_category_id' WHERE `subcategory_id`='$subcategory_id'";
+    $update_result = mysqli_query($con, $update_query);
 
-        if($update_result){
-            $_SESSION['status']= "Subcategory Updated  successfully";
-            header('location: subcategory.php');
-        }
-        else{
-            $_SESSION['status']= "Subcategory Updating Failed";
-            header('location: subcategory.php');
-        }     
-
+    if($update_result){
+        $_SESSION['status']= "Subcategory Updated  successfully";
+        header('location: subcategory.php');
     }
+    else{
+        $_SESSION['status']= "Subcategory Updating Failed";
+        header('location: subcategory.php');
+    }     
+}
 // update subcategory code end here
 
 
@@ -143,9 +142,6 @@ if(isset($_POST['logout_btn'])){
             $_SESSION['status']="Password and Confirm Password Does not match";
             header('location: register.php');
         }
-
-
-
     }
 // user add code end here 
 
@@ -242,25 +238,25 @@ if (isset($_POST['addtag'])) {
 
 
 // user update information code 
-    if(isset($_POST['updateuser'])){
-        $user_id    = $_POST['user_id'];
-        $name       = mysqli_real_escape_string($con, $_POST['name']) ;
-        $phone      = mysqli_real_escape_string($con, $_POST['phone']) ;
-        $email      = mysqli_real_escape_string($con, $_POST['email']) ;        
-        $password   = mysqli_real_escape_string($con, $_POST['password']) ; 
-        $role_as   = mysqli_real_escape_string($con, $_POST['role_as']) ; 
+if(isset($_POST['updateuser'])){
+    $user_id    = $_POST['user_id'];
+    $name       = mysqli_real_escape_string($con, $_POST['name']) ;
+    $phone      = mysqli_real_escape_string($con, $_POST['phone']) ;
+    $email      = mysqli_real_escape_string($con, $_POST['email']) ;        
+    $password   = mysqli_real_escape_string($con, $_POST['password']) ; 
+    $role_as   = mysqli_real_escape_string($con, $_POST['role_as']) ; 
 
-        $query      = "UPDATE users SET name='$name', phone='$phone', email='$email', password='$password',role_as='$role_as' WHERE id= '$user_id' ";
-        $query_run  = mysqli_query($con,$query);
-        if($query_run){
-            $_SESSION['status']= "User Updated  successfully";
-            header('location: register.php');
-        }
-        else{
-            $_SESSION['status']= "user Updating Failed";
-            header('location: register.php');
-        }
+    $query      = "UPDATE users SET name='$name', phone='$phone', email='$email', password='$password',role_as='$role_as' WHERE id= '$user_id' ";
+    $query_run  = mysqli_query($con,$query);
+    if($query_run){
+        $_SESSION['status']= "User Updated  successfully";
+        header('location: register.php');
     }
+    else{
+        $_SESSION['status']= "user Updating Failed";
+        header('location: register.php');
+    }
+}
 // end of user update information code
 
 
@@ -274,20 +270,38 @@ if (isset($_POST['addtag'])) {
 
 //  update category information  code start
 
-    if (isset($_POST['updatecategory'])) {
-        $category_id = $_POST['category_id'];
-        $category_name = mysqli_real_escape_string($con, $_POST['category_name']);
-        $query = "UPDATE category SET category_name='$category_name' WHERE category_id='$category_id' LIMIT 1";
-        $query_run = mysqli_query($con, $query);
-        if ($query_run) {
-            $_SESSION['status'] = "Category Updated successfully";
-            header('location: category.php');
-        } else {
-            $_SESSION['status'] = "Category Updating Failed";
-            header('location: category.php');
-        }
+if (isset($_POST['updatecategory'])) {
+    $category_id = $_POST['category_id'];
+    $category_name = mysqli_real_escape_string($con, $_POST['category_name']);
+    $query = "UPDATE category SET category_name='$category_name' WHERE category_id='$category_id' LIMIT 1";
+    $query_run = mysqli_query($con, $query);
+    if ($query_run) {
+        $_SESSION['status'] = "Category Updated successfully";
+        header('location: category.php');
+    } else {
+        $_SESSION['status'] = "Category Updating Failed";
+        header('location: category.php');
     }
+}
 //  update category information  code end
+
+
+//update tag code start here
+if (isset($_POST['updatetag'])){
+    $tag_id = $_POST['tag_id'];
+    $tag_name = mysqli_real_escape_string($con, $_POST['tag_name']);
+    $query = "UPDATE tag SET tag_name='$tag_name' WHERE tag_id='$tag_id' LIMIT 1";
+    $query_run = mysqli_query($con, $query);
+    if ($query_run) {
+        $_SESSION['status'] = "tag Updated successfully";
+        header('location: tag.php');
+    } else {
+        $_SESSION['status'] = "tag Updating Failed";
+        header('location: tag.php');
+    }
+}
+// end of update tag code 
+
 
 
 
