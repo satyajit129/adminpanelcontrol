@@ -114,7 +114,9 @@ include('../admin/config/dbcon.php');
 
           <div class="col-lg-8 entries">
             <?php
-            $query = "SELECT * FROM post";
+            if(isset($_GET['id'])){
+            $category_id    = $_GET['id'];
+            $query = "SELECT * FROM post where category_id='$category_id' ";
             $query_run = mysqli_query($con, $query);
             if (mysqli_num_rows($query_run) > 0) {
               while ($row = mysqli_fetch_assoc($query_run)) {
@@ -156,6 +158,7 @@ include('../admin/config/dbcon.php');
                 <?php
               }
             }
+        }
             ?>
             <!-- pagination start -->
             <?php
