@@ -100,7 +100,7 @@ if(isset($_GET['delete_post_id'])){
                                     </td>
                                     <td>
                                         <div class="d-flex " >
-                                            <a href="#" class="m-1 ">
+                                            <a href="updatepost.php?post_id=<?php echo $row['post_id'];?>" class="m-1">
                                             <i class="fas fa-edit fs-5 btn btn-info btn-sm"></i>
                                         </a>
                                         <a class="m-1 " href="post.php?delete_post_id=<?php echo $row['post_id']; ?>">

@@ -1,5 +1,5 @@
 <?php
- include('../admin/config/dbcon.php');
+include('../admin/config/dbcon.php');
 ?>
 
 <!DOCTYPE html>
@@ -113,66 +113,73 @@
         <div class="row">
 
           <div class="col-lg-8 entries">
-
-            <article class="entry">
-
             <?php
-              $query= "SELECT * FROM post";
-              $query_run= mysqli_query($con, $query);
-              if(mysqli_num_rows($query_run) > 0) {
-                  while ($row = mysqli_fetch_assoc($query_run)) {
+            $query = "SELECT * FROM post";
+            $query_run = mysqli_query($con, $query);
+            if (mysqli_num_rows($query_run) > 0) {
+              while ($row = mysqli_fetch_assoc($query_run)) {
+                ?>
+                <article class="entry">
+                  <div class="entry-img m-5">
+                    <img src="../admin/images/<?php echo $row['tumb_img']; ?>" alt="" class="img-fluid">
+                  </div>
+
+                  <h2 class="entry-title">
+                    <div class=""></div>
+                    <a href="blog-single.php">
+                      <?php echo $row['title']; ?>
+                    </a>
+                  </h2>
+
+                  <div class="entry-meta">
+                    <ul>
+
+                      <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.php"><time
+                            datetime="2020-01-01"><?php echo $row['created_at']; ?></time></a>
+                      </li>
+
+                    </ul>
+                  </div>
+
+                  <div class="entry-content">
+                    <p>
+                      <?php
+                      $postDetails = $row['post_details'];
+                      echo $postDetails;
+                      ?>
+                    </p>
+                    <div class="read-more">
+                      <a href="blog-single.php">Click to Read More</a>
+                    </div>
+                  </div>
+                </article><!-- End blog entry -->
+                <?php
+              }
+            }
             ?>
-        <article class="blog-entry">
-            <div class="entry-img m-5">
-                <img src="../admin/images/<?php echo $row['tumb_img']; ?>" alt="" class="img-fluid">
-            </div>
 
-            <h2 class="entry-title">
-              <div class=""></div>
-                <a href="blog-single.php"><?php echo $row['title']; ?></a>
-            </h2>
+            <!-- pagination start -->
+            <?php
+            $pagination = "SELECT * FROM post";
+            $run_query = mysqli_query($con, $pagination);
+            $total_post = mysqli_num_rows($run_query);
+            $limit =3;
+            $page = ceil($total_post / $limit);
+            ?>
+            <ul class="pagination pt-2 pb-5">
+              <?php for ($i = 1; $i<= $page; $i++) { ?>
+                <li class="page-item">
+                  <a href="" class="page-link">
+                    <?= $i ?>
+                  </a>
+                </li>
+                <?php
+              }
+              ?>
+            </ul>
+            <!-- pagination end here  -->
 
-            <div class="entry-meta">
-                <ul>
-                    
-                    <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.php"><time
-                    datetime="2020-01-01"><?php echo $row['created_at']; ?></time></a></li>
-                    
-                </ul>
-            </div>
-
-            <div class="entry-content">
-                <p>
-                    <?php 
-                          $postDetails = $row['post_details'];
-                          $words = explode(' ', $postDetails);
-                          $limitedWords = array_slice($words, 0, 30);
-                          $limitedContent = implode(' ', $limitedWords);
-
-                          if (count($words) > 30) {
-                              $limitedContent .= '........';
-                          }
-                          echo $limitedContent;
-                    ?>
-                </p>
-                <div class="read-more">
-                    <a href="blog-single.php">Click to Read More</a>
-                </div>
-            </div>
-        </article><!-- End blog entry -->
-        <?php
-    }
-}
-?>
-
-
-            <div class="blog-pagination">
-              <ul class="justify-content-center">
-                <li><a href="#">1</a></li>
-                <li class="active"><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-              </ul>
-            </div>
+            
 
           </div><!-- End blog entries list -->
 
@@ -190,23 +197,25 @@
 
               <h3 class="sidebar-title text">Categories</h3>
               <?php
-                $query= "SELECT * FROM category";
-                $query_run= mysqli_query($con, $query);
-                if(mysqli_num_rows($query_run) > 0) {
-                    while ($row = mysqli_fetch_assoc($query_run)){
-              ?>
-              <div class="row sidebar-item categories">
-                
-                  <a href="#" class="btn btn-secondary text-white"><?php echo $row['category_name']; ?></a>
-                
-                  
-                
-              </div><!-- End sidebar categories-->
-              <?php
+              $query = "SELECT * FROM category";
+              $query_run = mysqli_query($con, $query);
+              if (mysqli_num_rows($query_run) > 0) {
+                while ($row = mysqli_fetch_assoc($query_run)) {
+                  ?>
+                  <div class="row sidebar-item categories">
+
+                    <a href="#" class="btn btn-secondary text-white">
+                      <?php echo $row['category_id'] . $row['category_name']; ?>
+                    </a>
+
+
+
+                  </div><!-- End sidebar categories-->
+                  <?php
                 }
               }
-                ?>
-                
+              ?>
+
 
 
               <h3 class="sidebar-title">Recent Posts</h3>
@@ -225,7 +234,8 @@
 
                 <div class="post-item clearfix">
                   <img src="assets/img/blog/blog-recent-3.jpg" alt="">
-                  <h4><a href="blog-single.php">Id quia et et ut maxime similique occaecati ut</a></h4>
+                  <h4><a href="blog-single.php">Id quia et et ut maxime similique occaecati ut</a>
+                  </h4>
                   <time datetime="2020-01-01">Jan 1, 2020</time>
                 </div>
 
@@ -245,25 +255,27 @@
 
               <h3 class="sidebar-title text-center">Tags</h3>
               <?php
-              
-                $query= "SELECT * FROM tag";
-                $query_run= mysqli_query($con, $query);
-                if(mysqli_num_rows($query_run) > 0) {
-                    while ($row = mysqli_fetch_assoc($query_run)) {
 
-                    
-                
-            ?>
-              <div class="sidebar-item tags">
-                <ul>
-                  <a href="#" class="border border-primary" > <?php echo $row['tag_name']; ?> </a>
-                </ul>
-                  
-              </div><!-- End sidebar tags-->
-              <?php
+              $query = "SELECT * FROM tag";
+              $query_run = mysqli_query($con, $query);
+              if (mysqli_num_rows($query_run) > 0) {
+                while ($row = mysqli_fetch_assoc($query_run)) {
+
+
+
+                  ?>
+                  <div class="sidebar-item tags">
+                    <ul>
+                      <a href="#" class="border border-primary">
+                        <?php echo $row['tag_name']; ?>
+                      </a>
+                    </ul>
+
+                  </div><!-- End sidebar tags-->
+                  <?php
+                }
               }
-            }
-              ?> 
+              ?>
 
             </div><!-- End sidebar -->
 
@@ -335,7 +347,8 @@
 
           <div class="col-lg-3 col-md-6 footer-info">
             <h3>About Moderna</h3>
-            <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies
+            <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita
+              valies
               darta donna mare fermentum iaculis eu non diam phasellus.</p>
             <div class="social-links mt-3">
               <a href="#" class="twitter"><i class="bx bxl-twitter"></i></a>

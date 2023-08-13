@@ -32,7 +32,7 @@ include('config/dbcon.php');
                 <div class="card">
                     <div class="card-header">
                         Edit - Tag
-                        <a href="category.php" class="btn btn-success float-right btn-sm"><i class="fa fa-backward m-1"
+                        <a href="tag.php" class="btn btn-success float-right btn-sm"><i class="fa fa-backward m-1"
                                 aria-hidden="true"></i>Back</a>
                     </div>
                     <div class="card-body">

@@ -43,7 +43,7 @@
                             <div class="col-md-10">
                                 <form action="code.php" method="POST" enctype="multipart/form-data">
                                     <div class="form-group">
-                                        <label for="subcategory_name">POST Name</label>
+                                        <label for="subcategory_name">POST Title</label>
                                         <input type="text" class="form-control" name="title"
                                             id="" required>
                                     </div>

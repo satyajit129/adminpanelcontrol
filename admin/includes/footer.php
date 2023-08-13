@@ -76,6 +76,27 @@
   });
   });
 </script>
+
+<script>
+  $(document).ready(function() {
+  $('#category-dropdown-post').on('change', function() {
+  var category_id = this.value;
+  console.log(category_id);
+  $.ajax({
+  url: "subcategorydroppost.php",
+  type: "POST",
+  data: {
+  category_id: category_id
+  },
+  cache: false,
+  success: function(result){
+    console.log(result);
+  $("#sub-category-dropdown-post").html(result);
+  }
+  });
+  });
+  });
+</script>
 <!-- Summernote JS - CDN Link -->
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
 <script>
@@ -89,11 +110,51 @@
 
     <!-- multiple option selection cdn using select2 -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
+  <script>
     $(document).ready(function() {
     $('.js-example-basic-multiple').select2();
     });
 </script>
   <!-- multiple option selection cdn using select2 -->
+
+
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const categoryButtons = document.querySelectorAll(".category-list .btn");
+
+    categoryButtons.forEach(button => {
+        button.addEventListener("mouseover", function() {
+            const categoryId = this.dataset.categoryId; // Assuming you add data-category-id attribute to your button
+            loadSubcategories(categoryId);
+        });
+    });
+
+    // Function to load and display subcategories
+    function loadSubcategories(categoryId) {
+        const subcategoryList = document.querySelector(".subcategory-list");
+
+        // You might use AJAX here to fetch subcategories for the given category
+        // and populate the subcategoryList with the fetched data
+
+        // For demonstration, let's assume subcategories is an array of subcategory names
+        const subcategories = ["Subcategory 1", "Subcategory 2", "Subcategory 3"];
+
+        subcategoryList.innerHTML = ""; // Clear previous content
+
+        subcategories.forEach(subcategory => {
+            const subcategoryItem = document.createElement("div");
+            subcategoryItem.textContent = subcategory;
+            subcategoryList.appendChild(subcategoryItem);
+        });
+
+        // Display the subcategory list
+        subcategoryList.style.display = "block";
+    }
+});
+
+</script>
+
+
+  
 </body>
 </html>
