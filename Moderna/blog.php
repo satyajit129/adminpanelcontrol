@@ -157,19 +157,18 @@ include('../admin/config/dbcon.php');
               }
             }
             ?>
-
             <!-- pagination start -->
             <?php
             $pagination = "SELECT * FROM post";
             $run_query = mysqli_query($con, $pagination);
             $total_post = mysqli_num_rows($run_query);
-            $limit =3;
+            $limit =3; 
             $page = ceil($total_post / $limit);
             ?>
             <ul class="pagination pt-2 pb-5">
               <?php for ($i = 1; $i<= $page; $i++) { ?>
                 <li class="page-item">
-                  <a href="" class="page-link">
+                  <a href="blog.php?page=<?= $i ?>" class="page-link">
                     <?= $i ?>
                   </a>
                 </li>
@@ -177,9 +176,20 @@ include('../admin/config/dbcon.php');
               }
               ?>
             </ul>
+
+              <?php
+              
+              if(!isset($_GET['page'])){
+                $page=1;
+              }
+              else{
+                $page=$_GET['page'];
+              }
+              $offset= ($page-1)* $limit;
+              ?>
             <!-- pagination end here  -->
 
-            
+
 
           </div><!-- End blog entries list -->
 
