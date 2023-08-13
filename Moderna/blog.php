@@ -272,7 +272,7 @@ include('../admin/config/dbcon.php');
                   ?>
                   <div class="sidebar-item tags">
                     <ul>
-                      <a href="#" class="border border-primary">
+                      <a href="tagshow.php?id=<?=$row['tag_id']?>" class="border border-primary">
                         <?php echo $row['tag_name']; ?>
                       </a>
                     </ul>
