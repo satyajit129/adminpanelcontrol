@@ -113,11 +113,25 @@ include('../admin/config/dbcon.php');
         <div class="row">
 
           <div class="col-lg-8 entries">
-            <?php
-            if(isset($_GET['id'])){
-            $category_id    = $_GET['id'];
-            $query = "SELECT * FROM post where category_id='$category_id' ";
-            $query_run = mysqli_query($con, $query);
+          <?php
+          if(isset($_GET['id'])){
+            $get= $_GET['id'];
+          }
+            
+            $pagination = "SELECT * FROM post WHERE category_id= '$get' "; 
+            $run_query = mysqli_query($con, $pagination);
+            $total_post = mysqli_num_rows($run_query);
+            $limit = 3;
+            $page = ceil($total_post / $limit);
+            if (!isset($_GET['page'])) {
+              $page_s = 1;
+            } else {
+              $page_s = $_GET['page'];
+            }
+            $offset = ($page_s - 1) * $limit;
+            $paginationtwo = "SELECT * FROM post WHERE category_id='$get' LIMIT $limit OFFSET $offset";
+            $query_run = mysqli_query($con, $paginationtwo);
+            
             if (mysqli_num_rows($query_run) > 0) {
               while ($row = mysqli_fetch_assoc($query_run)) {
                 ?>
@@ -129,7 +143,7 @@ include('../admin/config/dbcon.php');
                   <h2 class="entry-title">
                     <div class=""></div>
                     <a href="blog-single.php">
-                      <?php echo $row['title']; ?>
+                      <?php echo $row['title'];?>
                     </a>
                   </h2>
 
@@ -158,18 +172,11 @@ include('../admin/config/dbcon.php');
                 <?php
               }
             }
-        }
             ?>
             <!-- pagination start -->
-            <?php
-            $pagination = "SELECT * FROM post";
-            $run_query = mysqli_query($con, $pagination);
-            $total_post = mysqli_num_rows($run_query);
-            $limit =3; 
-            $page = ceil($total_post / $limit);
-            ?>
+            
             <ul class="pagination pt-2 pb-5">
-              <?php for ($i = 1; $i<= $page; $i++) { ?>
+              <?php for ($i = 1; $i <= $page; $i++) { ?>
                 <li class="page-item">
                   <a href="blog.php?page=<?= $i ?>" class="page-link">
                     <?= $i ?>
@@ -179,15 +186,9 @@ include('../admin/config/dbcon.php');
               }
               ?>
             </ul>
-              <?php
-              if(!isset($_GET['page'])){
-                $page=1;
-              }
-              else{
-                $page=$_GET['page'];
-              }
-              $offset= ($page-1)* $limit;
-              ?>
+            <?php
+            
+            ?>
             <!-- pagination end here  -->
 
           </div><!-- End blog entries list -->
@@ -204,28 +205,85 @@ include('../admin/config/dbcon.php');
                 </form>
               </div><!-- End sidebar search formn-->
 
-              <h3 class="sidebar-title text">Categories</h3>
-              <?php
-              $query = "SELECT * FROM category";
-              $query_run = mysqli_query($con, $query);
-              if (mysqli_num_rows($query_run) > 0) {
-                while ($row = mysqli_fetch_assoc($query_run)) {
-                  ?>
-                  <div class="row sidebar-item categories">
 
-                    <a href="categoryshow.php?id=<?= $row['category_id']?>" class="btn btn-secondary text-white">
-                      <?php echo $row['category_name']; ?>
-                    </a>
-
-
-
-                  </div><!-- End sidebar categories-->
-                  <?php
+              <ul class="list-group">
+                <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Categories</h3>
+                <?php
+                $query = "SELECT * FROM category";
+                $query_run = mysqli_query($con, $query);
+                
+                if (mysqli_num_rows($query_run) > 0) {
+                  while ($row = mysqli_fetch_assoc($query_run)) {
+                    $category_id = $row['category_id'];
+                    $subcategory_query = "SELECT * FROM subcategory WHERE category_id = '$category_id'";
+                    $subcategory_query_run = mysqli_query($con, $subcategory_query);
+                    $count_query = "SELECT * FROM post WHERE category_id = '$category_id'";
+                    $count_query = mysqli_query($con, $count_query);
+                    ?>
+                    <li class="list-group-item category-item d-flex justify-content-between align-items-center">
+                      <a href="categoryshow.php?id=<?= $row['category_id'] ?>" class="text-dark category-link">
+                        <?php echo $row['category_name']; ?>
+                      </a>
+                      <div class="subcategory-list list-group">
+                        <?php
+                        while ($subcategory_row = mysqli_fetch_assoc($subcategory_query_run)) {?>
+                          <a href="" class="m-2">
+                            <?php echo $subcategory_row['subcategory_name'] . "<br>";?>
+                          </a>
+                          <?php
+                        }
+                        ?>
+                      </div>
+                      <span class="badge bg-primary rounded-pill"><?php echo mysqli_num_rows($count_query);?></span>
+                    </li>
+                    <?php
+                  }
                 }
-              }
-              ?>
+                ?>
+              </ul>
 
+              <style>
+                .list-group {
+                  list-style: none;
+                  padding: 0;
+                  width: 300px;
+                  /* Adjust the width as needed */
+                }
 
+                .category-item {
+                  padding: 10px;
+                  border: 1px solid #ccc;
+                  margin-bottom: 5px;
+                  position: relative;
+                  cursor: pointer;
+                }
+
+                .category-link {
+                  text-decoration: none;
+                  color: #333;
+                }
+
+                .subcategory-list {
+                  display: none;
+                  position: absolute;
+                  top: 100%;
+                  left: 20%;
+                  background-color: #fff;
+                  border: 1px solid #ccc;
+                  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+                  padding: 10px;
+                  z-index: 1;
+                  width: 100%;
+                }
+
+                .category-item:hover .subcategory-list {
+                  display: block;
+                }
+
+                .subcategory-item {
+                  margin-bottom: 5px;
+                }
+              </style>
 
               <h3 class="sidebar-title">Recent Posts</h3>
               <div class="sidebar-item recent-posts">
@@ -262,6 +320,8 @@ include('../admin/config/dbcon.php');
 
               </div><!-- End sidebar recent posts-->
 
+              
+
               <h3 class="sidebar-title text-center">Tags</h3>
               <?php
 
@@ -269,13 +329,10 @@ include('../admin/config/dbcon.php');
               $query_run = mysqli_query($con, $query);
               if (mysqli_num_rows($query_run) > 0) {
                 while ($row = mysqli_fetch_assoc($query_run)) {
-
-
-
                   ?>
                   <div class="sidebar-item tags">
                     <ul>
-                      <a href="#" class="border border-primary">
+                      <a href="tagshow.php?id=<?= $row['tag_id'] ?>" class="border border-primary">
                         <?php echo $row['tag_name']; ?>
                       </a>
                     </ul>
