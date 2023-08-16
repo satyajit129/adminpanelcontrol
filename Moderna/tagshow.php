@@ -110,91 +110,83 @@ include('../admin/config/dbcon.php');
         <!-- ======= Blog Section ======= -->
         <section id="blog" class="blog">
             <div class="container" data-aos="fade-up">
-
                 <div class="row">
-
                     <div class="col-lg-8 entries">
-                        <?php
-                        if (isset($_GET['id'])) {
-                            $tag_id = $_GET['id'];
-                            $query = "SELECT post.*
-                                    FROM post
-                                    INNER JOIN post_tag ON post.post_id = post_tag.post_id
-                                    WHERE post_tag.tag_id = '$tag_id' ";
-                            $query_run = mysqli_query($con, $query);
+                    <?php
+                        $tag_id = isset($_GET['id']) ? $_GET['id'] : "";
+                        $tag_query = "SELECT * FROM post_tag WHERE tag_id = '$tag_id'";
+                        $query_run_pagination = mysqli_query($con, $tag_query);
+
+                        while ($row_pagination = mysqli_fetch_assoc($query_run_pagination)) {
+                            $postId = $row_pagination['post_id'];
+                            $post_query = "SELECT * FROM post WHERE post_id = '$postId'";
+                            $query_run = mysqli_query($con, $post_query);
+
+                            $total_post = mysqli_num_rows($query_run);
+                            $limit = 3;
+                            $page = ceil($total_post / $limit);
+
+                            if (!isset($_GET['page'])) {
+                                $page_s = 1;
+                            } else {
+                                $page_s = $_GET['page'];
+                            }
+
+                            $offset = ($page_s - 1) * $limit;
+
+                            $paginationtwo = "SELECT * FROM post WHERE post_id='$postId' LIMIT $limit OFFSET $offset";
+                            $query_run = mysqli_query($con, $paginationtwo);
+
                             if (mysqli_num_rows($query_run) > 0) {
-                                while ($row = mysqli_fetch_assoc($query_run)) {
-                                    ?>
+                                while ($row = mysqli_fetch_assoc($query_run)) { ?>
                                     <article class="entry">
                                         <div class="entry-img m-5">
                                             <img src="../admin/images/<?php echo $row['tumb_img']; ?>" alt="" class="img-fluid">
                                         </div>
-
                                         <h2 class="entry-title">
-                                            <div class=""></div>
                                             <a href="blog-single.php">
-                                                <?php echo $row['title']; ?>
+                                                <?php echo $row['title'];  ?>
                                             </a>
                                         </h2>
-
                                         <div class="entry-meta">
                                             <ul>
-
-                                                <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a
-                                                        href="blog-single.php"><time datetime="2020-01-01"><?php echo $row['created_at']; ?></time></a>
+                                                <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.php"><time datetime="2020-01-01">
+                                                            <?php echo $row['created_at']; ?>
+                                                        </time></a>
                                                 </li>
-
                                             </ul>
                                         </div>
-
                                         <div class="entry-content">
                                             <p>
-                                                <?php
-                                                $postDetails = $row['post_details'];
-                                                echo $postDetails;
-                                                ?>
+                                                <?php echo $row['post_details']; ?>
                                             </p>
                                             <div class="read-more">
                                                 <a href="blog-single.php">Click to Read More</a>
                                             </div>
                                         </div>
                                     </article><!-- End blog entry -->
-                                    <?php
+                            <?php
                                 }
                             }
                         }
                         ?>
                         <!-- pagination start -->
-                        <?php
-                        $pagination = "SELECT * FROM post";
-                        $run_query = mysqli_query($con, $pagination);
-                        $total_post = mysqli_num_rows($run_query);
-                        $limit = 3;
-                        $page = ceil($total_post / $limit);
-                        ?>
                         <ul class="pagination pt-2 pb-5">
                             <?php for ($i = 1; $i <= $page; $i++) { ?>
-                                <li class="page-item">
-                                    <a href="blog.php?page=<?= $i ?>" class="page-link">
+                                <li class="page-item <?= ($i == $page_s) ? "active" : "" ?>">
+                                    <a href="tagshow.php?id=<?= $tag_id ?>&page=<?= $i ?>" class="page-link">
                                         <?= $i ?>
                                     </a>
                                 </li>
-                                <?php
-                            }
-                            ?>
+                            <?php } ?>
                         </ul>
-                        <?php
-                        if (!isset($_GET['page'])) {
-                            $page = 1;
-                        } else {
-                            $page = $_GET['page'];
-                        }
-                        $offset = ($page - 1) * $limit;
-                        ?>
-                        <!-- pagination end here  -->
+                        <!-- pagination end here -->
+
+
+
+                    <!-- showing post -->
 
                     </div><!-- End blog entries list -->
-
                     <div class="col-lg-4">
 
                         <div class="sidebar">
@@ -207,30 +199,88 @@ include('../admin/config/dbcon.php');
                                 </form>
                             </div><!-- End sidebar search formn-->
 
-                            <h3 class="sidebar-title text">Categories</h3>
-                            <?php
-                            $query = "SELECT * FROM category";
-                            $query_run = mysqli_query($con, $query);
-                            if (mysqli_num_rows($query_run) > 0) {
-                                while ($row = mysqli_fetch_assoc($query_run)) {
-                                    ?>
-                                    <div class="row sidebar-item categories">
+                            <ul class="list-group">
+                                <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Categories</h3>
+                                <?php
+                                $query = "SELECT * FROM category";
+                                $query_run = mysqli_query($con, $query);
 
-                                        <a href="categoryshow.php?id=<?= $row['category_id'] ?>"
-                                            class="btn btn-secondary text-white">
-                                            <?php echo $row['category_name']; ?>
-                                        </a>
-
-
-
-                                    </div><!-- End sidebar categories-->
-                                    <?php
+                                if (mysqli_num_rows($query_run) > 0) {
+                                    while ($row = mysqli_fetch_assoc($query_run)) {
+                                        $category_id = $row['category_id'];
+                                        $subcategory_query = "SELECT * FROM subcategory WHERE category_id = '$category_id'";
+                                        $subcategory_query_run = mysqli_query($con, $subcategory_query);
+                                        $count_query = "SELECT * FROM post WHERE category_id = '$category_id'";
+                                        $count_query = mysqli_query($con, $count_query);
+                                        ?>
+                                        <li
+                                            class="list-group-item category-item d-flex justify-content-between align-items-center">
+                                            <a href="categoryshow.php?id=<?= $row['category_id'] ?>"
+                                                class="text-dark category-link">
+                                                <?php echo $row['category_name']; ?>
+                                            </a>
+                                            <div class="subcategory-list list-group">
+                                                <?php
+                                                while ($subcategory_row = mysqli_fetch_assoc($subcategory_query_run)) { ?>
+                                                    <a href="" class="m-2">
+                                                        <?php echo $subcategory_row['subcategory_name'] . "<br>"; ?>
+                                                    </a>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </div>
+                                            <span class="badge bg-primary rounded-pill">
+                                                <?php echo mysqli_num_rows($count_query); ?>
+                                            </span>
+                                        </li>
+                                        <?php
+                                    }
                                 }
-                            }
-                            ?>
+                                ?>
+                            </ul>
 
+                            <style>
+                                .list-group {
+                                    list-style: none;
+                                    padding: 0;
+                                    width: 300px;
+                                    /* Adjust the width as needed */
+                                }
 
+                                .category-item {
+                                    padding: 10px;
+                                    border: 1px solid #ccc;
+                                    margin-bottom: 5px;
+                                    position: relative;
+                                    cursor: pointer;
+                                }
 
+                                .category-link {
+                                    text-decoration: none;
+                                    color: #333;
+                                }
+
+                                .subcategory-list {
+                                    display: none;
+                                    position: absolute;
+                                    top: 100%;
+                                    left: 20%;
+                                    background-color: #fff;
+                                    border: 1px solid #ccc;
+                                    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.1);
+                                    padding: 10px;
+                                    z-index: 1;
+                                    width: 100%;
+                                }
+
+                                .category-item:hover .subcategory-list {
+                                    display: block;
+                                }
+
+                                .subcategory-item {
+                                    margin-bottom: 5px;
+                                }
+                            </style>
                             <h3 class="sidebar-title">Recent Posts</h3>
                             <div class="sidebar-item recent-posts">
                                 <div class="post-item clearfix">
@@ -266,29 +316,29 @@ include('../admin/config/dbcon.php');
 
                             </div><!-- End sidebar recent posts-->
 
-                            <h3 class="sidebar-title text-center">Tags</h3>
-                            <?php
 
-                            $query = "SELECT * FROM tag";
-                            $query_run = mysqli_query($con, $query);
-                            if (mysqli_num_rows($query_run) > 0) {
-                                while ($row = mysqli_fetch_assoc($query_run)) {
-
-
-
-                                    ?>
-                                    <div class="sidebar-item tags">
-                                        <ul>
-                                            <a href="tagshow.php?id=<?= $row['tag_id'] ?>" class="border border-primary">
+                            <!-- show all tag items -->
+                            <ul class="list-group">
+                                <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Tags</h3>
+                                <?php
+                                $query = "SELECT * FROM tag";
+                                $query_run = mysqli_query($con, $query);
+                                if (mysqli_num_rows($query_run) > 0) {
+                                    while ($row = mysqli_fetch_assoc($query_run)) {
+                                        ?>
+                                        <li
+                                            class="list-group-item category-item d-flex justify-content-between align-items-center">
+                                            <a href="tagshow.php?id=<?= $row['tag_id'] ?>" class="text-dark category-link">
                                                 <?php echo $row['tag_name']; ?>
                                             </a>
-                                        </ul>
-
-                                    </div><!-- End sidebar tags-->
-                                    <?php
+                                        </li>
+                                        <?php
+                                    }
                                 }
-                            }
-                            ?>
+                                ?>
+                            </ul>
+                            <!-- show all tag items -->
+
 
                         </div><!-- End sidebar -->
 

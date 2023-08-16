@@ -113,9 +113,13 @@ include('../admin/config/dbcon.php');
         <div class="row">
 
           <div class="col-lg-8 entries">
-            <!-- pagination start here  -->
-          <?php
-            $pagination = "SELECT * FROM post"; 
+            <?php
+            $get = ""; // Define a default value
+            if (isset($_GET['subcategory_id'])) {
+              $get = $_GET['subcategory_id'];
+            }
+
+            $pagination = "SELECT * FROM post WHERE subcategory_id= '$get' ";
             $run_query = mysqli_query($con, $pagination);
             $total_post = mysqli_num_rows($run_query);
             $limit = 3;
@@ -126,9 +130,9 @@ include('../admin/config/dbcon.php');
               $page_s = $_GET['page'];
             }
             $offset = ($page_s - 1) * $limit;
-            $paginationtwo = "SELECT * FROM post LIMIT $limit OFFSET $offset";
+            $paginationtwo = "SELECT * FROM post WHERE subcategory_id='$get' LIMIT $limit OFFSET $offset";
             $query_run = mysqli_query($con, $paginationtwo);
-            
+
             if (mysqli_num_rows($query_run) > 0) {
               while ($row = mysqli_fetch_assoc($query_run)) {
                 ?>
@@ -140,7 +144,7 @@ include('../admin/config/dbcon.php');
                   <h2 class="entry-title">
                     <div class=""></div>
                     <a href="blog-single.php">
-                      <?php echo $row['title'];?>
+                      <?php echo $row['title']; ?>
                     </a>
                   </h2>
 
@@ -171,27 +175,23 @@ include('../admin/config/dbcon.php');
             }
             ?>
             <!-- pagination start -->
-            
             <ul class="pagination pt-2 pb-5">
               <?php for ($i = 1; $i <= $page; $i++) { ?>
                 <li class="page-item <?= ($i == $page_s) ? "active" : "" ?>">
-                  <a href="blog.php?page=<?= $i ?>" class="page-link">
-                    <?= $i ?>
+                <a href="categoryshow.php?id=<?= $get ?>&page=<?= $i ?>" class="page-link">
+                  <?= $i ?>
+                </a>
                   </a>
                 </li>
               <?php } ?>
             </ul>
-            <?php
-            
-            ?>
             <!-- pagination end here  -->
-
+            
           </div><!-- End blog entries list -->
 
           <div class="col-lg-4">
 
             <div class="sidebar">
-
               <h3 class="sidebar-title">Search</h3>
               <div class="sidebar-item search-form">
                 <form action="">
@@ -206,7 +206,7 @@ include('../admin/config/dbcon.php');
                 <?php
                 $query = "SELECT * FROM category";
                 $query_run = mysqli_query($con, $query);
-                
+
                 if (mysqli_num_rows($query_run) > 0) {
                   while ($row = mysqli_fetch_assoc($query_run)) {
                     $category_id = $row['category_id'];
@@ -221,15 +221,17 @@ include('../admin/config/dbcon.php');
                       </a>
                       <div class="subcategory-list list-group">
                         <?php
-                        while ($subcategory_row = mysqli_fetch_assoc($subcategory_query_run)) {?>
+                        while ($subcategory_row = mysqli_fetch_assoc($subcategory_query_run)) { ?>
                           <a href="subcategoryshow.php?subcategory_id=<?php echo $subcategory_row['subcategory_id']; ?>" class="m-2">
-                            <?php echo $subcategory_row['subcategory_name'] . "<br>";?>
+                            <?php echo $subcategory_row['subcategory_name'] . "<br>"; ?>
                           </a>
                           <?php
                         }
                         ?>
                       </div>
-                      <span class="badge bg-primary rounded-pill"><?php echo mysqli_num_rows($count_query);?></span>
+                      <span class="badge bg-primary rounded-pill">
+                        <?php echo mysqli_num_rows($count_query); ?>
+                      </span>
                     </li>
                     <?php
                   }
@@ -315,7 +317,6 @@ include('../admin/config/dbcon.php');
 
               </div><!-- End sidebar recent posts-->
 
-              
 
               <!-- show all tag items -->
               <ul class="list-group">
@@ -337,7 +338,6 @@ include('../admin/config/dbcon.php');
                 ?>
               </ul>
               <!-- show all tag items -->
-
             </div><!-- End sidebar -->
 
           </div><!-- End blog sidebar -->
