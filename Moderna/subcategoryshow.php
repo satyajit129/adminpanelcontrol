@@ -178,7 +178,7 @@ include('../admin/config/dbcon.php');
             <ul class="pagination pt-2 pb-5">
               <?php for ($i = 1; $i <= $page; $i++) { ?>
                 <li class="page-item <?= ($i == $page_s) ? "active" : "" ?>">
-                <a href="categoryshow.php?id=<?= $get ?>&page=<?= $i ?>" class="page-link">
+                <a href="subcategoryshow.php?subcategory_id=<?= $get ?>&page=<?= $i ?>" class="page-link">
                   <?= $i ?>
                 </a>
                   </a>
@@ -282,40 +282,32 @@ include('../admin/config/dbcon.php');
                 }
               </style>
 
-              <h3 class="sidebar-title">Recent Posts</h3>
-              <div class="sidebar-item recent-posts">
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-1.jpg" alt="">
-                  <h4><a href="blog-single.php">Nihil blanditiis at in nihil autem</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
+              <!-- RECENT POST  -->
+              <ul class="list-group mt-5 mb-5">
+                <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Recent Posts</h3>
+                <?php
+                $recentpostquery = "SELECT * FROM `post` ORDER BY `post`.`created_at` DESC LIMIT 5";
+                ;
+                $recentpostquery_run = mysqli_query($con, $recentpostquery);
+                while ($recentpostrow = mysqli_fetch_assoc($recentpostquery_run)) {
+                  ?>
 
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-2.jpg" alt="">
-                  <h4><a href="blog-single.php">Quidem autem et impedit</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-3.jpg" alt="">
-                  <h4><a href="blog-single.php">Id quia et et ut maxime similique occaecati ut</a>
-                  </h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-4.jpg" alt="">
-                  <h4><a href="blog-single.php">Laborum corporis quo dara net para</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-5.jpg" alt="">
-                  <h4><a href="blog-single.php">Et dolores corrupti quae illo quod dolor</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-              </div><!-- End sidebar recent posts-->
+                  <div class="sidebar-item recent-posts">
+                    <div class="post-item clearfix">
+                      <img src="../admin/images/<?php echo $recentpostrow['tumb_img'];?>" alt="">
+                      <h4><a href="blog-single.php">
+                          <?php echo $recentpostrow['title']; ?>
+                        </a></h4>
+                      <time datetime="2020-01-01">
+                        <?php echo $recentpostrow['created_at']; ?>
+                      </time>
+                    </div>
+                  </div>
+                  <?php
+                }
+                ?>
+              </ul>
+              <!-- recent post -->
 
 
               <!-- show all tag items -->

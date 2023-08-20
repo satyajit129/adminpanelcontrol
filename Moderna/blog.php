@@ -114,8 +114,8 @@ include('../admin/config/dbcon.php');
 
           <div class="col-lg-8 entries">
             <!-- pagination start here  -->
-          <?php
-            $pagination = "SELECT * FROM post"; 
+            <?php
+            $pagination = "SELECT * FROM post";
             $run_query = mysqli_query($con, $pagination);
             $total_post = mysqli_num_rows($run_query);
             $limit = 3;
@@ -128,7 +128,7 @@ include('../admin/config/dbcon.php');
             $offset = ($page_s - 1) * $limit;
             $paginationtwo = "SELECT * FROM post LIMIT $limit OFFSET $offset";
             $query_run = mysqli_query($con, $paginationtwo);
-            
+
             if (mysqli_num_rows($query_run) > 0) {
               while ($row = mysqli_fetch_assoc($query_run)) {
                 ?>
@@ -140,7 +140,7 @@ include('../admin/config/dbcon.php');
                   <h2 class="entry-title">
                     <div class=""></div>
                     <a href="blog-single.php">
-                      <?php echo $row['title'];?>
+                      <?php echo $row['title']; ?>
                     </a>
                   </h2>
 
@@ -171,7 +171,7 @@ include('../admin/config/dbcon.php');
             }
             ?>
             <!-- pagination start -->
-            
+
             <ul class="pagination pt-2 pb-5">
               <?php for ($i = 1; $i <= $page; $i++) { ?>
                 <li class="page-item <?= ($i == $page_s) ? "active" : "" ?>">
@@ -182,7 +182,7 @@ include('../admin/config/dbcon.php');
               <?php } ?>
             </ul>
             <?php
-            
+
             ?>
             <!-- pagination end here  -->
 
@@ -192,21 +192,31 @@ include('../admin/config/dbcon.php');
 
             <div class="sidebar">
 
-              <h3 class="sidebar-title">Search</h3>
-              <div class="sidebar-item search-form">
-                <form action="">
-                  <input type="text">
-                  <button type="submit"><i class="bi bi-search"></i></button>
+
+              <!-- search option -->
+              <?php
+              if(isset($_GET['keyword'])){
+                $keyword= $_GET['keyword'];
+              }
+              else{
+                $keyword="";
+              }
+              ?>
+              
+                <form action="search.php" method="GET" class="d-flex mb-5">
+                <input type="text" class="form-control me-sm-2" placeholder="Search" name="keyword" required maxlength="70" autocomplete="off" value="<?php echo $keyword ?>">
+                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
-              </div><!-- End sidebar search formn-->
+              
+              <!-- search option -->
 
-
-              <ul class="list-group">
+                <!-- category show -->
+              <ul class="list-group ">
                 <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Categories</h3>
                 <?php
                 $query = "SELECT * FROM category";
                 $query_run = mysqli_query($con, $query);
-                
+
                 if (mysqli_num_rows($query_run) > 0) {
                   while ($row = mysqli_fetch_assoc($query_run)) {
                     $category_id = $row['category_id'];
@@ -221,15 +231,18 @@ include('../admin/config/dbcon.php');
                       </a>
                       <div class="subcategory-list list-group">
                         <?php
-                        while ($subcategory_row = mysqli_fetch_assoc($subcategory_query_run)) {?>
-                          <a href="subcategoryshow.php?subcategory_id=<?php echo $subcategory_row['subcategory_id']; ?>" class="m-2">
-                            <?php echo $subcategory_row['subcategory_name'] . "<br>";?>
+                        while ($subcategory_row = mysqli_fetch_assoc($subcategory_query_run)) { ?>
+                          <a href="subcategoryshow.php?subcategory_id=<?php echo $subcategory_row['subcategory_id']; ?>"
+                            class="m-2">
+                            <?php echo $subcategory_row['subcategory_name'] . "<br>"; ?>
                           </a>
                           <?php
                         }
                         ?>
                       </div>
-                      <span class="badge bg-primary rounded-pill"><?php echo mysqli_num_rows($count_query);?></span>
+                      <span class="badge bg-primary rounded-pill">
+                        <?php echo mysqli_num_rows($count_query); ?>
+                      </span>
                     </li>
                     <?php
                   }
@@ -279,43 +292,38 @@ include('../admin/config/dbcon.php');
                   margin-bottom: 5px;
                 }
               </style>
+              <!-- category show -->
 
-              <h3 class="sidebar-title">Recent Posts</h3>
-              <div class="sidebar-item recent-posts">
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-1.jpg" alt="">
-                  <h4><a href="blog-single.php">Nihil blanditiis at in nihil autem</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
 
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-2.jpg" alt="">
-                  <h4><a href="blog-single.php">Quidem autem et impedit</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
 
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-3.jpg" alt="">
-                  <h4><a href="blog-single.php">Id quia et et ut maxime similique occaecati ut</a>
-                  </h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
+              <!-- RECENT POST  -->
+              <ul class="list-group mt-5 mb-5">
+                <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Recent Posts</h3>
+                <?php
+                $recentpostquery = "SELECT * FROM `post` ORDER BY `post`.`created_at` DESC LIMIT 5";
+                ;
+                $recentpostquery_run = mysqli_query($con, $recentpostquery);
+                while ($recentpostrow = mysqli_fetch_assoc($recentpostquery_run)) {
+                  ?>
 
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-4.jpg" alt="">
-                  <h4><a href="blog-single.php">Laborum corporis quo dara net para</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
+                  <div class="sidebar-item recent-posts">
+                    <div class="post-item clearfix">
+                      <img src="../admin/images/<?php echo $recentpostrow['tumb_img'];?>" alt="">
+                      <h4><a href="blog-single.php">
+                          <?php echo $recentpostrow['title']; ?>
+                        </a></h4>
+                      <time datetime="2020-01-01">
+                        <?php echo $recentpostrow['created_at']; ?>
+                      </time>
+                    </div>
+                  </div>
+                  <?php
+                }
+                ?>
+              </ul>
+              <!-- recent post -->
 
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog/blog-recent-5.jpg" alt="">
-                  <h4><a href="blog-single.php">Et dolores corrupti quae illo quod dolor</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
 
-              </div><!-- End sidebar recent posts-->
-
-              
 
               <!-- show all tag items -->
               <ul class="list-group">

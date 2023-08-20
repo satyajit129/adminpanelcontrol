@@ -85,6 +85,51 @@ if (isset($_POST['addpost'])) {
 }
 // add post code end here
 
+// update post 
+if (isset($_POST['editpost'])) {
+    // Retrieve post_id and other form data
+    $post_id = isset($_POST['post_id']) ? $_POST['post_id'] : null;
+    $title = isset($_POST['title']) ? $_POST['title'] : null;
+    $description = isset($_POST['description']) ? $_POST['description'] : null;
+    $category_id = isset($_POST['parent_category_id']) ? $_POST['parent_category_id'] : null;
+    $subcategory_id = isset($_POST['parent_subcategory_id']) ? $_POST['parent_subcategory_id'] : null;
+
+    if (isset($_POST['post_tag']) && is_array($_POST['post_tag'])) {
+        $selected_tags = $_POST['post_tag'];
+    } else {
+        $selected_tags = array(); // If no tags were selected, set an empty array
+    }
+
+    // Update post data in the database
+    $update_query = "UPDATE `post` SET `title`=?, `post_details`=?, `category_id`=?, `subcategory_id`=? WHERE `post_id`=?";
+    $update_stmt = mysqli_prepare($con, $update_query);
+    mysqli_stmt_bind_param($update_stmt, "ssiii", $title, $description, $category_id, $subcategory_id, $post_id);
+    
+    if (mysqli_stmt_execute($update_stmt)) {
+        // Update post-tag relationships in the `post_tag` table
+        $delete_tags_query = "DELETE FROM `post_tag` WHERE `post_id`=?";
+        $delete_tags_stmt = mysqli_prepare($con, $delete_tags_query);
+        mysqli_stmt_bind_param($delete_tags_stmt, "i", $post_id);
+        mysqli_stmt_execute($delete_tags_stmt);
+        
+        foreach ($selected_tags as $tag_id) {
+            $insert_tags_query = "INSERT INTO `post_tag` (`post_id`, `tag_id`) VALUES (?, ?)";
+            $insert_tags_stmt = mysqli_prepare($con, $insert_tags_query);
+            mysqli_stmt_bind_param($insert_tags_stmt, "ii", $post_id, $tag_id);
+            mysqli_stmt_execute($insert_tags_stmt);
+        }
+
+        $_SESSION['status'] = "Post updated successfully";
+        header('location: post.php');
+        exit();
+    } else {
+        $_SESSION['status'] = "Error updating post: " . mysqli_stmt_error($update_stmt);
+        header('location: post.php');
+        exit();
+    }
+}
+// update post end here 
+
 
 
 

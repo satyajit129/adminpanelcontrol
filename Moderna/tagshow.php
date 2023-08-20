@@ -112,7 +112,7 @@ include('../admin/config/dbcon.php');
             <div class="container" data-aos="fade-up">
                 <div class="row">
                     <div class="col-lg-8 entries">
-                    <?php
+                        <?php
                         $tag_id = isset($_GET['id']) ? $_GET['id'] : "";
                         $tag_query = "SELECT * FROM post_tag WHERE tag_id = '$tag_id'";
                         $query_run_pagination = mysqli_query($con, $tag_query);
@@ -145,12 +145,13 @@ include('../admin/config/dbcon.php');
                                         </div>
                                         <h2 class="entry-title">
                                             <a href="blog-single.php">
-                                                <?php echo $row['title'];  ?>
+                                                <?php echo $row['title']; ?>
                                             </a>
                                         </h2>
                                         <div class="entry-meta">
                                             <ul>
-                                                <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-single.php"><time datetime="2020-01-01">
+                                                <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a
+                                                        href="blog-single.php"><time datetime="2020-01-01">
                                                             <?php echo $row['created_at']; ?>
                                                         </time></a>
                                                 </li>
@@ -165,7 +166,7 @@ include('../admin/config/dbcon.php');
                                             </div>
                                         </div>
                                     </article><!-- End blog entry -->
-                            <?php
+                                    <?php
                                 }
                             }
                         }
@@ -184,7 +185,7 @@ include('../admin/config/dbcon.php');
 
 
 
-                    <!-- showing post -->
+                        <!-- showing post -->
 
                     </div><!-- End blog entries list -->
                     <div class="col-lg-4">
@@ -281,40 +282,33 @@ include('../admin/config/dbcon.php');
                                     margin-bottom: 5px;
                                 }
                             </style>
-                            <h3 class="sidebar-title">Recent Posts</h3>
-                            <div class="sidebar-item recent-posts">
-                                <div class="post-item clearfix">
-                                    <img src="assets/img/blog/blog-recent-1.jpg" alt="">
-                                    <h4><a href="blog-single.php">Nihil blanditiis at in nihil autem</a></h4>
-                                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                                </div>
+                            <!-- RECENT POST  -->
+                            <ul class="list-group mt-5 mb-5">
+                                <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Recent Posts
+                                </h3>
+                                <?php
+                                $recentpostquery = "SELECT * FROM `post` ORDER BY `post`.`created_at` DESC LIMIT 5";
+                                ;
+                                $recentpostquery_run = mysqli_query($con, $recentpostquery);
+                                while ($recentpostrow = mysqli_fetch_assoc($recentpostquery_run)) {
+                                    ?>
 
-                                <div class="post-item clearfix">
-                                    <img src="assets/img/blog/blog-recent-2.jpg" alt="">
-                                    <h4><a href="blog-single.php">Quidem autem et impedit</a></h4>
-                                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                                </div>
-
-                                <div class="post-item clearfix">
-                                    <img src="assets/img/blog/blog-recent-3.jpg" alt="">
-                                    <h4><a href="blog-single.php">Id quia et et ut maxime similique occaecati ut</a>
-                                    </h4>
-                                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                                </div>
-
-                                <div class="post-item clearfix">
-                                    <img src="assets/img/blog/blog-recent-4.jpg" alt="">
-                                    <h4><a href="blog-single.php">Laborum corporis quo dara net para</a></h4>
-                                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                                </div>
-
-                                <div class="post-item clearfix">
-                                    <img src="assets/img/blog/blog-recent-5.jpg" alt="">
-                                    <h4><a href="blog-single.php">Et dolores corrupti quae illo quod dolor</a></h4>
-                                    <time datetime="2020-01-01">Jan 1, 2020</time>
-                                </div>
-
-                            </div><!-- End sidebar recent posts-->
+                                    <div class="sidebar-item recent-posts">
+                                        <div class="post-item clearfix">
+                                            <img src="../admin/images/<?php echo $recentpostrow['tumb_img']; ?>" alt="">
+                                            <h4><a href="blog-single.php">
+                                                    <?php echo $recentpostrow['title']; ?>
+                                                </a></h4>
+                                            <time datetime="2020-01-01">
+                                                <?php echo $recentpostrow['created_at']; ?>
+                                            </time>
+                                        </div>
+                                    </div>
+                                    <?php
+                                }
+                                ?>
+                            </ul>
+                            <!-- recent post -->
 
 
                             <!-- show all tag items -->

@@ -96,6 +96,7 @@ include('../admin/config/dbcon.php');
 
         <div class="d-flex justify-content-between align-items-center">
           <h2>Blog</h2>
+          <h5> Search Result For: <span class="text-primary" ><?php echo $keyword= $_GET['keyword']; ?></span> </h5>
 
           <ol>
             <li><a href="index.php">Home</a></li>
@@ -108,18 +109,17 @@ include('../admin/config/dbcon.php');
 
     <!-- ======= Blog Section ======= -->
     <section id="blog" class="blog">
+    
       <div class="container" data-aos="fade-up">
 
         <div class="row">
+            
 
           <div class="col-lg-8 entries">
+          
+            <!-- pagination start here  -->
             <?php
-            $get = ""; // Define a default value
-            if (isset($_GET['id'])) {
-              $get = $_GET['id'];
-            }
-
-            $pagination = "SELECT * FROM post WHERE category_id= '$get' ";
+            $pagination = "SELECT * FROM post";
             $run_query = mysqli_query($con, $pagination);
             $total_post = mysqli_num_rows($run_query);
             $limit = 3;
@@ -130,7 +130,7 @@ include('../admin/config/dbcon.php');
               $page_s = $_GET['page'];
             }
             $offset = ($page_s - 1) * $limit;
-            $paginationtwo = "SELECT * FROM post WHERE category_id='$get' LIMIT $limit OFFSET $offset";
+            $paginationtwo = "SELECT * FROM post LIMIT $limit OFFSET $offset";
             $query_run = mysqli_query($con, $paginationtwo);
 
             if (mysqli_num_rows($query_run) > 0) {
@@ -138,6 +138,7 @@ include('../admin/config/dbcon.php');
                 ?>
                 <article class="entry">
                   <div class="entry-img m-5">
+                    
                     <img src="../admin/images/<?php echo $row['tumb_img']; ?>" alt="" class="img-fluid">
                   </div>
 
@@ -175,32 +176,46 @@ include('../admin/config/dbcon.php');
             }
             ?>
             <!-- pagination start -->
+
             <ul class="pagination pt-2 pb-5">
               <?php for ($i = 1; $i <= $page; $i++) { ?>
                 <li class="page-item <?= ($i == $page_s) ? "active" : "" ?>">
-                <a href="categoryshow.php?id=<?= $get ?>&page=<?= $i ?>" class="page-link">
-                  <?= $i ?>
-                </a>
+                  <a href="blog.php?page=<?= $i ?>" class="page-link">
+                    <?= $i ?>
                   </a>
                 </li>
               <?php } ?>
             </ul>
+            <?php
+
+            ?>
             <!-- pagination end here  -->
-            
+
           </div><!-- End blog entries list -->
 
           <div class="col-lg-4">
 
             <div class="sidebar">
-              <h3 class="sidebar-title">Search</h3>
-              <div class="sidebar-item search-form">
-                <form action="">
-                  <input type="text">
-                  <button type="submit"><i class="bi bi-search"></i></button>
+
+            <!-- search option -->
+
+            <?php
+              if(isset($_GET['keyword'])){
+                $keyword= $_GET['keyword'];
+              }
+              else{
+                $keyword="";
+              }
+
+              ?>
+              
+                <form action="search.php" method="GET" class="d-flex mb-5">
+                <input type="text" class="form-control me-sm-2" placeholder="Search" name="keyword" required maxlength="70" autocomplete="off" value="<?php echo $keyword ?>">
+                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
                 </form>
-              </div><!-- End sidebar search formn-->
+                <!-- search option -->
 
-
+                <!-- category show -->
               <ul class="list-group">
                 <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Categories</h3>
                 <?php
@@ -222,7 +237,8 @@ include('../admin/config/dbcon.php');
                       <div class="subcategory-list list-group">
                         <?php
                         while ($subcategory_row = mysqli_fetch_assoc($subcategory_query_run)) { ?>
-                          <a href="subcategoryshow.php?subcategory_id=<?php echo $subcategory_row['subcategory_id']; ?>" class="m-2">
+                          <a href="subcategoryshow.php?subcategory_id=<?php echo $subcategory_row['subcategory_id']; ?>"
+                            class="m-2">
                             <?php echo $subcategory_row['subcategory_name'] . "<br>"; ?>
                           </a>
                           <?php
@@ -281,9 +297,12 @@ include('../admin/config/dbcon.php');
                   margin-bottom: 5px;
                 }
               </style>
+              <!-- category show -->
 
-                <!-- RECENT POST  -->
-                <ul class="list-group mt-5 mb-5">
+
+
+              <!-- RECENT POST  -->
+              <ul class="list-group mt-5 mb-5">
                 <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Recent Posts</h3>
                 <?php
                 $recentpostquery = "SELECT * FROM `post` ORDER BY `post`.`created_at` DESC LIMIT 5";
@@ -310,6 +329,7 @@ include('../admin/config/dbcon.php');
               <!-- recent post -->
 
 
+
               <!-- show all tag items -->
               <ul class="list-group">
                 <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Tags</h3>
@@ -330,6 +350,7 @@ include('../admin/config/dbcon.php');
                 ?>
               </ul>
               <!-- show all tag items -->
+
             </div><!-- End sidebar -->
 
           </div><!-- End blog sidebar -->
