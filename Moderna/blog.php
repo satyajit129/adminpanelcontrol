@@ -195,22 +195,22 @@ include('../admin/config/dbcon.php');
 
               <!-- search option -->
               <?php
-              if(isset($_GET['keyword'])){
-                $keyword= $_GET['keyword'];
-              }
-              else{
-                $keyword="";
+              if (isset($_GET['keyword'])) {
+                $keyword = $_GET['keyword'];
+              } else {
+                $keyword = "";
               }
               ?>
-              
-                <form action="search.php" method="GET" class="d-flex mb-5">
-                <input type="text" class="form-control me-sm-2" placeholder="Search" name="keyword" required maxlength="70" autocomplete="off" value="<?php echo $keyword ?>">
-                  <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                </form>
-              
+
+              <form action="search.php" method="GET" class="d-flex mb-5">
+                <input type="text" class="form-control me-sm-2" placeholder="Search" name="keyword" required
+                  maxlength="70" autocomplete="off" value="<?php echo $keyword ?>">
+                <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+              </form>
+
               <!-- search option -->
 
-                <!-- category show -->
+              <!-- category show -->
               <ul class="list-group ">
                 <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Categories</h3>
                 <?php
@@ -308,7 +308,7 @@ include('../admin/config/dbcon.php');
 
                   <div class="sidebar-item recent-posts">
                     <div class="post-item clearfix">
-                      <img src="../admin/images/<?php echo $recentpostrow['tumb_img'];?>" alt="">
+                      <img src="../admin/images/<?php echo $recentpostrow['tumb_img']; ?>" alt="">
                       <h4><a href="blog-single.php">
                           <?php echo $recentpostrow['title']; ?>
                         </a></h4>

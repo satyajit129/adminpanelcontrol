@@ -1,22 +1,30 @@
 <?php
+session_start();
 
 include('../admin/config/dbcon.php');
 
-if(isset($_POST['submit'])){
-    $name           = mysqli_real_escape_string($con, $_POST['name']) ;  
-    $email          = mysqli_real_escape_string($con, $_POST['email']) ;  
-    $subject        = mysqli_real_escape_string($con, $_POST['subject']) ;  
-    $message        = mysqli_real_escape_string($con, $_POST['message']) ; 
-    $insertquery    = "INSERT INTO `contact`(`name`, `email`, `subject`, `message`) VALUES ('$name','$email','$subject ','$message')";
-    $iquery         = mysqli_query($con, $insertquery);
-    if($iquery==TRUE){
-        echo "data insert Successfully";
+if (isset($_POST['submit'])) {
+    $name = mysqli_real_escape_string($con, $_POST['name']);
+    $email = mysqli_real_escape_string($con, $_POST['email']);
+    $subject = mysqli_real_escape_string($con, $_POST['subject']);
+    $message = mysqli_real_escape_string($con, $_POST['message']);
+    $insertquery = "INSERT INTO `contact`(`name`, `email`, `subject`, `message`) VALUES ('$name','$email','$subject','$message')";
+    $iquery = mysqli_query($con, $insertquery);
 
+    if ($iquery == TRUE) {
+        $_SESSION['status'] = "Data insert Successfully"; 
+        $_SESSION['status_code']='success';
+        
+    } else {
+        $_SESSION['status'] = "Data Not insert"; 
+        $_SESSION['status_code']='error';
+        
     }
-    else{
-        echo " data not inserted";
-    }
+    header('Location: contact.php');
+    exit();
 }
+
+
 ?>
 
 
@@ -179,10 +187,9 @@ if(isset($_POST['submit'])){
                                     required></textarea>
                             </div>
 
-                            <button class="btn btn-success" type="submit" name="submit">Submit</button>
+                            <button class="btn btn-success mt-2 w-100" type="submit" name="submit">Send Message </button>
+                            
                         </form>
-
-
                     </div>
 
                 </div>
@@ -303,6 +310,23 @@ if(isset($_POST['submit'])){
 
     <!-- Template Main JS File -->
     <script src="assets/js/main.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <?php
+if (isset($_SESSION['status'])) {
+    ?>
+    <script>
+        swal({
+            title: "<?= $_SESSION['status'];?>",
+            // text: "You clicked the button!",
+            icon: "<?= $_SESSION['status_code'];?>",
+            button: "CLILCK",
+        });
+    </script>
+    <?php 
+        unset($_SESSION['status']);
+    }
+
+?>
 
 </body>
 
