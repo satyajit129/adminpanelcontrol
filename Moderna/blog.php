@@ -139,7 +139,7 @@ include('../admin/config/dbcon.php');
 
                   <h2 class="entry-title">
                     <div class=""></div>
-                    <a href="blog-single.php">
+                    <a href="blog-single.php?post_id=<?php echo $row['post_id']; ?>">
                       <?php echo $row['title']; ?>
                     </a>
                   </h2>
@@ -162,7 +162,7 @@ include('../admin/config/dbcon.php');
                       ?>
                     </p>
                     <div class="read-more">
-                      <a href="blog-single.php">Click to Read More</a>
+                    <a href="blog-single.php?post_id=<?php echo $row['post_id']; ?>">Click to Read More</a>
                     </div>
                   </div>
                 </article><!-- End blog entry -->
