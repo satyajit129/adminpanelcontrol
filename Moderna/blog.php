@@ -309,7 +309,7 @@ include('../admin/config/dbcon.php');
                   <div class="sidebar-item recent-posts">
                     <div class="post-item clearfix">
                       <img src="../admin/images/<?php echo $recentpostrow['tumb_img']; ?>" alt="">
-                      <h4><a href="blog-single.php">
+                      <h4><a href="blog-single.php?post_id=<?php echo $recentpostrow['post_id']; ?>">
                           <?php echo $recentpostrow['title']; ?>
                         </a></h4>
                       <time datetime="2020-01-01">

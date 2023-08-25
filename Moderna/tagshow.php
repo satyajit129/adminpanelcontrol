@@ -114,31 +114,35 @@ include('../admin/config/dbcon.php');
                     <div class="col-lg-8 entries">
                         <?php
                         $tag_id = isset($_GET['id']) ? $_GET['id'] : "";
+
+                        // Validate and sanitize the input to prevent SQL injection
+                        $tag_id = mysqli_real_escape_string($con, $tag_id);
+                        
                         $tag_query = "SELECT * FROM post_tag WHERE tag_id = '$tag_id'";
                         $query_run_pagination = mysqli_query($con, $tag_query);
-
+                        
+                        // Fetch related posts outside the loop
+                        $related_posts = array();
                         while ($row_pagination = mysqli_fetch_assoc($query_run_pagination)) {
-                            $postId = $row_pagination['post_id'];
-                            $post_query = "SELECT * FROM post WHERE post_id = '$postId'";
-                            $query_run = mysqli_query($con, $post_query);
-
-                            $total_post = mysqli_num_rows($query_run);
-                            $limit = 3;
-                            $page = ceil($total_post / $limit);
-
-                            if (!isset($_GET['page'])) {
-                                $page_s = 1;
-                            } else {
-                                $page_s = $_GET['page'];
-                            }
-
-                            $offset = ($page_s - 1) * $limit;
-
-                            $paginationtwo = "SELECT * FROM post WHERE post_id='$postId' LIMIT $limit OFFSET $offset";
-                            $query_run = mysqli_query($con, $paginationtwo);
-
-                            if (mysqli_num_rows($query_run) > 0) {
-                                while ($row = mysqli_fetch_assoc($query_run)) { ?>
+                            $related_posts[] = $row_pagination['post_id'];
+                        }
+                        
+                        $total_post = count($related_posts);
+                        $limit = 3;
+                        $page = ceil($total_post / $limit);
+                        
+                        if (!isset($_GET['page'])) {
+                            $page_s = 1;
+                        } else {
+                            $page_s = $_GET['page'];
+                        }
+                        
+                        $offset = ($page_s - 1) * $limit;
+                        
+                        $pagination_query = "SELECT * FROM post WHERE post_id IN (" . implode(',', $related_posts) . ") LIMIT $limit OFFSET $offset";
+                        $query_run = mysqli_query($con, $pagination_query);
+                        
+                        while ($row = mysqli_fetch_assoc($query_run)) { ?>
                                     <article class="entry">
                                         <div class="entry-img m-5">
                                             <img src="../admin/images/<?php echo $row['tumb_img']; ?>" alt="" class="img-fluid">
@@ -162,14 +166,12 @@ include('../admin/config/dbcon.php');
                                                 <?php echo $row['post_details']; ?>
                                             </p>
                                             <div class="read-more">
-                                                <a href="blog-single.php">Click to Read More</a>
+                                                <a href="blog-single.php?post_id=<?php echo $row['post_id'];?>">Click to Read More</a>
                                             </div>
                                         </div>
                                     </article><!-- End blog entry -->
                                     <?php
                                 }
-                            }
-                        }
                         ?>
                         <!-- pagination start -->
                         <ul class="pagination pt-2 pb-5">

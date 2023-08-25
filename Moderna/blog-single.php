@@ -4,31 +4,45 @@ include('../admin/config/dbcon.php');
 if (isset($_GET['post_id'])) {
   $post_id = $_GET['post_id'];
 
-  // Fetch post details from the database
-  $sql = "SELECT p.*, c.category_name, t.tag_name
+  // Sanitize the input (recommended) or use prepared statements
+
+  $sql = "SELECT p.*, c.category_id, c.category_name, t.tag_id, t.tag_name
     FROM post p
     LEFT JOIN category c ON p.category_id = c.category_id
     LEFT JOIN post_tag pt ON p.post_id = pt.post_id
     LEFT JOIN tag t ON pt.tag_id = t.tag_id
     WHERE p.post_id = $post_id";
 
-  $result = mysqli_query($con, $sql);
+  $sql_run = mysqli_query($con, $sql);
 
-  if (mysqli_num_rows($result) > 0) {
-    $row = mysqli_fetch_assoc($result);
+  if ($sql_run) {
+    // Fetch the row of data
+    $row = mysqli_fetch_assoc($sql_run);
+
+    if ($row) {
+      $title = $row['title'];
+      $tumb_img = $row['tumb_img'];
+      $post_details = $row['post_details'];
+      $created_at = $row['created_at'];
+      $category_id = $row['category_id'];
+      $category_name = $row['category_name'];
+
+      // Fetch all tags associated with the post
+      $tags = array();
+      $tag_ids = array();
+      do {
+          $tags[] = $row['tag_name'];
+          $tag_ids[] = $row['tag_id'];
+      } while ($row = mysqli_fetch_assoc($sql_run));
+    } else {
+      echo "No post found.";
+    }
   } else {
-    echo "Post not found.";
+    echo "Error executing the query: " . mysqli_error($con);
   }
-  mysqli_close($con);
-} else {
-  echo "Invalid request.";
 }
+
 ?>
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -129,7 +143,7 @@ if (isset($_GET['post_id'])) {
             <li><a href="index.php">Home</a></li>
             <li><a href="blog.php">Blog</a></li>
             <li>
-              <?php echo $row['title']; ?>
+              <?php echo $title; ?>
             </li>
           </ol>
         </div>
@@ -148,26 +162,26 @@ if (isset($_GET['post_id'])) {
             <article class="entry entry-single">
 
               <div class="entry-img">
-                <img src="../admin/images/<?php echo $row['tumb_img']; ?>" alt="" class="img-fluid">
+                <img src="../admin/images/<?php echo $tumb_img; ?>" alt="" class="img-fluid">
               </div>
 
               <h2 class="entry-title">
                 <a href="blog-single.php">
-                  <?php echo $row['title']; ?>
+                  <?php echo $title; ?>
                 </a>
               </h2>
 
               <div class="entry-meta">
                 <ul>
                   <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <time datetime="2020-01-01">
-                      <?php echo $row['created_at']; ?>
+                      <?php echo $created_at; ?>
                     </time></li>
                 </ul>
               </div>
 
               <div class="entry-content">
                 <p>
-                  <?php echo $row['post_details']; ?>
+                  <?php echo $post_details; ?>
                 </p>
 
                 <p>
@@ -177,30 +191,32 @@ if (isset($_GET['post_id'])) {
 
                 <blockquote>
                   <p>
-                    <?php echo $row['post_details']; ?>
+                    <?php echo $post_details; ?>
                   </p>
                 </blockquote>
 
                 <p>
-                  <?php echo $row['post_details']; ?>
+                  <?php echo $post_details; ?>
                 </p>
-                <img src="../admin/images/<?php echo $row['tumb_img']; ?>" class="img-fluid" alt="">
+                <img src="../admin/images/<?php echo $tumb_img; ?>" class="img-fluid" alt="">
 
               </div>
 
               <div class="entry-footer">
                 <i class="bi bi-folder"></i>
                 <ul class="cats">
-                  <li><a href="#">
-                      <?php echo $row['category_name']; ?>
+                  <li><a href="categoryshow.php?id=<?=$category_id; ?>">
+                      <?php echo $category_name; ?>
                     </a></li>
                 </ul>
 
                 <i class="bi bi-tags"></i>
                 <ul class="tags">
-                  <li><a href="#">
-                      <?php echo $row['tag_name']; ?>
-                    </a></li>
+                  
+                  <?php foreach ($tags as $tag) { ?>
+                      <li><?php echo $tag;?></li>
+                  <?php } ?>
+                   
                 </ul>
               </div>
 
@@ -221,12 +237,33 @@ if (isset($_GET['post_id'])) {
                 </form>
               </div><!-- End sidebar search formn-->
 
+
+            <!-- category name  -->
               <ul class="list-group ">
                 <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded">Categories</h3>
-                <ul>
-
+                
+                <li class="list-group-item category-item d-flex justify-content-between align-items-center">
+                <a href="categoryshow.php?id=<?=$category_id; ?>" class="text-dark category-link">    
+                  <?php echo $category_name; ?>
+                </a>
+                    </li>
                 </ul>
-            </div><!-- End sidebar categories-->
+                <!-- tag -->
+                <ul class="list-group">
+                <h3 class="sidebar-title text-center text-white bg-primary p-2 rounded mt-5" >Tags</h3>
+                <?php foreach ($tags as $id => $tag) { ?>
+                    <li class="list-group-item category-item d-flex justify-content-between align-items-center">
+                        <a href="tagshow.php?id=<?= $tag_ids[$id] ?>" class="text-dark category-link">
+                            <?php echo $tag; ?>
+                        </a>
+                    </li>
+                <?php } ?>
+                </ul>
+            </div>
+            <!-- category name  -->
+            <!-- show all tag items -->
+            
+              <!-- show all tag items -->
           </div><!-- End sidebar -->
 
         </div><!-- End blog sidebar -->
@@ -342,5 +379,4 @@ if (isset($_GET['post_id'])) {
   <script src="assets/js/main.js"></script>
 
 </body>
-
 </html>
