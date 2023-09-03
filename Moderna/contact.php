@@ -312,21 +312,20 @@ if (isset($_POST['submit'])) {
     <script src="assets/js/main.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <?php
-if (isset($_SESSION['status'])) {
+    if (isset($_SESSION['status'])) {
+        ?>
+        <script>
+            swal({
+                title: "<?= $_SESSION['status'];?>",
+                // text: "You clicked the button!",
+                icon: "<?= $_SESSION['status_code'];?>",
+                button: "CLILCK",
+            });
+        </script>
+        <?php 
+            unset($_SESSION['status']);
+        }
     ?>
-    <script>
-        swal({
-            title: "<?= $_SESSION['status'];?>",
-            // text: "You clicked the button!",
-            icon: "<?= $_SESSION['status_code'];?>",
-            button: "CLILCK",
-        });
-    </script>
-    <?php 
-        unset($_SESSION['status']);
-    }
-
-?>
 
 </body>
 

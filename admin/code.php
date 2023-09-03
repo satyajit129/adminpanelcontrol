@@ -3,7 +3,38 @@
     include('config/dbcon.php');  
 
 
+// update Banner code 
+if(isset($_POST['updatebanner'])) {
+    // Retrieve form data
+    $id = $_POST['id'];
+    $title = $_POST['title'];
+    $paragraph = $_POST['paragraph'];
 
+    // Validate data (you can add more validation as needed)
+    if(empty($title) || empty($paragraph)) {
+        $_SESSION['status'] = "Please fill out all fields.";
+    } else {
+        // Update data in the "banner" table (you can use your database connection code here)
+        // Replace the following lines with your database update query
+        $updateQuery = "UPDATE banner SET title = '$title', paragraph = '$paragraph' WHERE id = '$id'";
+        $updateResult = mysqli_query($con, $updateQuery);
+
+        // Check if the update operation was successful
+        if($updateResult) {
+            $_SESSION['status'] = "Banner updated successfully.";
+            $_SESSION['status_code']='success';
+        } else {
+            $_SESSION['status'] = "Error updating banner: " . mysqli_error($con);
+            $_SESSION['status_code']='error';
+        }
+
+        // Redirect back to the same page or another appropriate page
+        echo '<script>window.location.href = "banner.php";</script>';
+        exit();
+    }
+}
+
+// Update Banner code end here 
 
 // update subcategory code start here
 if(isset($_POST['updatesubcategory'])){
